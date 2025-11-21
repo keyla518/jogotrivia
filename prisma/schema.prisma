@@ -48,6 +48,8 @@ model Utilizador {
   // Trocas feitas e recebidas
   trocasFeitas    Troca[] @relation("TrocasFeitas")
   trocasRecebidas Troca[] @relation("TrocasRecebidas")
+
+  progresso ProgressoCategoriaRegiao[] 
 }
 
 model Pergunta {
@@ -72,6 +74,7 @@ model Regiao {
   nomeRegiao String
 
   perguntas Pergunta[]
+  progresso ProgressoCategoriaRegiao[]
 }
 
 model Categoria {
@@ -79,6 +82,7 @@ model Categoria {
   nomeCategoria String
 
   perguntas Pergunta[]
+  progresso ProgressoCategoriaRegiao[]
 }
 
 model Carta {
@@ -119,3 +123,18 @@ model Troca {
   cartaOferecida Carta @relation("CartaOferecida", fields: [cartaOferecidaID], references: [cartaID])
   cartaPedida    Carta @relation("CartaPedida", fields: [cartaPedidaID], references: [cartaID])
 }
+
+model ProgressoCategoriaRegiao {
+  usuarioID   Int
+  regiaoID    Int
+  categoriaID Int
+  concluido   Boolean @default(false)
+
+  // Relações
+  utilizador Utilizador @relation(fields: [usuarioID], references: [usuarioID])
+  regiao     Regiao     @relation(fields: [regiaoID], references: [regiaoID])
+  categoria  Categoria  @relation(fields: [categoriaID], references: [categoriaID])
+
+  @@id([usuarioID, regiaoID, categoriaID]) // chave primária composta
+}
+
