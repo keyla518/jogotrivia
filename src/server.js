@@ -7,6 +7,7 @@ import userRoutes from "./routes/user.js";
 import perguntaRoutes from "./routes/perguntaRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import gameRoutes from "./routes/game.js"; // ✅ IMPORTANTE
+import adminRoutes from "./routes/adminRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -21,6 +22,8 @@ app.use("/user", userRoutes);
 app.use("/auth", authRoutes);
 app.use("/api/pergunta", perguntaRoutes);
 app.use("/jogo", gameRoutes); // ✅ AGORA PROXIMA-PERGUNTA FUNCIONA
+app.use(express.json()); // para req.body como JSON
+app.use("/admin", adminRoutes);
 
 // Rota teste
 app.get("/", (req, res) => {
