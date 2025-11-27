@@ -3,9 +3,11 @@ import { PrismaClient } from "@prisma/client";
 import { autenticarToken } from "../middleware/auth.js";
 import { ordemRegioes } from "../config/regioesOrdem.js"; // IDs inteiros
 
-const XP_MINIMO = 50; //Para passar de nivel
 const router = express.Router();
 const prisma = new PrismaClient();
+const replay = req.body.replay === true;
+const XP_MINIMO = 50; //Para passar de nivel
+
 
 // -----------------
 // ROTA: próxima pergunta
@@ -107,28 +109,31 @@ router.post("/verificar-resposta", autenticarToken, async (req, res) => {
     // ---------------------------
     // ATUALIZAR PROGRESSO
     // ---------------------------
-    const progresso = await prisma.progressoCategoriaRegiao.findUnique({
-      where: {
-        usuarioID_regiaoID_categoriaID: {
-          usuarioID,
-          regiaoID: pergunta.regiaoID,
-          categoriaID: pergunta.categoriaID
-        }
-      }
-    });
-
-    if (progresso) {
-      await prisma.progressoCategoriaRegiao.update({
+    
+      if (!replay){
+      const progresso = await prisma.progressoCategoriaRegiao.findUnique({
         where: {
           usuarioID_regiaoID_categoriaID: {
             usuarioID,
             regiaoID: pergunta.regiaoID,
             categoriaID: pergunta.categoriaID
           }
-        },
-        data: { concluido: true }
+        }
       });
-    }
+
+      if (progresso) {
+        await prisma.progressoCategoriaRegiao.update({
+          where: {
+            usuarioID_regiaoID_categoriaID: {
+              usuarioID,
+              regiaoID: pergunta.regiaoID,
+              categoriaID: pergunta.categoriaID
+            }
+          },
+          data: { concluido: true }
+        });
+      }
+      }
 
     // Verificar se faltam categorias na região
     const restantes = await prisma.progressoCategoriaRegiao.findMany({
@@ -150,13 +155,20 @@ router.post("/verificar-resposta", autenticarToken, async (req, res) => {
         select: { xp: true }
       });
 
-      // 1️⃣ Não há próxima região (jogo finalizado)
+      // 1️⃣ Fim de todas as regiões → carta lendária garantida
       if (!proximaRegiaoID) {
+        
+        const cartaLendaria = await darCartaAoUsuario(usuarioID, "lendaria");
+
         return res.json({
           correta: true,
           message: "🏁 Acertaste! E terminaste TODAS as regiões!",
           moedasGanhas,
-          xpGanho
+          xpGanho,
+          carta: cartaLendaria ? {
+            nome: cartaLendaria.nomeCarta,
+            tipo: "lendaria"
+          } : null
         });
       }
 
@@ -173,7 +185,7 @@ router.post("/verificar-resposta", autenticarToken, async (req, res) => {
         });
       }
 
-      // 3️⃣ XP suficiente — desbloqueia próxima região
+      // 3️⃣ XP suficiente → desbloquear e dar carta correta
       const categorias = await prisma.categoria.findMany();
       for (const cat of categorias) {
         await prisma.progressoCategoriaRegiao.create({
@@ -185,11 +197,24 @@ router.post("/verificar-resposta", autenticarToken, async (req, res) => {
         });
       }
 
+      // LENDÁRIA se região atual for Açores ou Madeira
+      let cartaRecebida;
+
+      if (REGIOES_LENDARIAS.includes(pergunta.regiaoID)) {
+        cartaRecebida = await darCartaAoUsuario(usuarioID, "lendaria");
+      } else {
+        cartaRecebida = await darCartaAoUsuario(usuarioID, "comum");
+      }
+
       return res.json({
         correta: true,
-        message: "🎉 Acertaste e concluíste a região! Próxima desbloqueada!",
+        message: "🎉 Região concluída! Próxima desbloqueada!",
         moedasGanhas,
-        xpGanho
+        xpGanho,
+        carta: cartaRecebida ? {
+          nome: cartaRecebida.nomeCarta,
+          tipo: cartaRecebida.raridade
+        } : null
       });
     }
 
@@ -274,5 +299,58 @@ router.post("/usar-pista", autenticarToken, async (req, res) => {
   } catch (error) {
     console.log("Erro no endpoint /usar-pista:", error);
     return res.status(500).json({ error: "Erro ao usar pista." });
+  }
+});
+
+
+// -----------------
+// ROTA: perguntas de uma região específica (REPLAY)
+// -----------------
+
+router.get("/perguntas-regiao/:regiaoID", autenticarToken, async (req, res) => {
+  const usuarioID = req.user.usuarioID;
+  const regiaoID = parseInt(req.params.regiaoID);
+
+  try {
+    // Verificar se essa região já foi desbloqueada
+    const desbloqueada = await prisma.progressoCategoriaRegiao.findFirst({
+      where: { usuarioID, regiaoID }
+    });
+
+    if (!desbloqueada) {
+      return res.status(403).json({
+        error: "❌ Não tens acesso a esta região ainda!"
+      });
+    }
+
+    // Buscar perguntas da região inteira
+    const perguntas = await prisma.pergunta.findMany({
+      where: { regiaoID }
+    });
+
+    if (perguntas.length === 0) {
+      return res.status(404).json({ error: "Nenhuma pergunta encontrada nesta região." });
+    }
+
+    const pergunta = perguntas[Math.floor(Math.random() * perguntas.length)];
+
+    res.json({
+      replay: true,
+      message: "Pergunta carregada para ganhar XP!",
+      pergunta: {
+        id: pergunta.perguntaID,
+        texto: pergunta.textoPergunta,
+        opcoes: {
+          A: pergunta.opcaoA,
+          B: pergunta.opcaoB,
+          C: pergunta.opcaoC,
+          D: pergunta.opcaoD
+        }
+      }
+    });
+
+  } catch (error) {
+    console.log("Erro ao buscar perguntas de replay:", error);
+    res.status(500).json({ error: "Erro ao carregar perguntas da região" });
   }
 });
