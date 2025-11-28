@@ -245,38 +245,37 @@ router.post("/usar-pista", autenticarToken, async (req, res) => {
   const usuarioID = req.user.usuarioID;
 
   try {
-    // Buscar usuário
+    // 1️⃣ Buscar usuário
     const usuario = await prisma.utilizador.findUnique({
       where: { usuarioID }
     });
 
-    if (!usuario) {
-      return res.status(404).json({ error: "Usuário não encontrado." });
-    }
+    if (!usuario) return res.status(404).json({ error: "Usuário não encontrado." });
 
-    // Verificar moedas suficientes
+    // 2️⃣ Verificar moedas suficientes
     if (usuario.moedas < 5) {
-      return res.status(400).json({ error: "Moedas insuficientes para usar pista." });
+      return res.status(400).json({ 
+        error: "Moedas insuficientes para usar pista.", 
+        moedasAtuais: usuario.moedas 
+      });
     }
 
-    // Buscar pergunta
+    // 3️⃣ Buscar pergunta
     const pergunta = await prisma.pergunta.findUnique({
       where: { perguntaID }
     });
 
-    if (!pergunta) {
-      return res.status(404).json({ error: "Pergunta não encontrada." });
-    }
+    if (!pergunta) return res.status(404).json({ error: "Pergunta não encontrada." });
 
-    // Lista das opções erradas
+    // 4️⃣ Lista das opções erradas
     const opcoesErradas = ["A", "B", "C", "D"].filter(
       opc => opc !== pergunta.opcaoCerta
     );
 
-    // Escolher aleatoriamente 2 opções para remover
+    // 5️⃣ Escolher aleatoriamente 2 opções para remover
     const removidas = opcoesErradas.sort(() => 0.5 - Math.random()).slice(0, 2);
 
-    // Criar novo objeto de opções restantes
+    // 6️⃣ Criar novo objeto de opções restantes
     const opcoesRestantes = {
       A: removidas.includes("A") ? null : pergunta.opcaoA,
       B: removidas.includes("B") ? null : pergunta.opcaoB,
@@ -284,15 +283,17 @@ router.post("/usar-pista", autenticarToken, async (req, res) => {
       D: removidas.includes("D") ? null : pergunta.opcaoD
     };
 
-    // Descontar 5 moedas
+    // 7️⃣ Descontar 5 moedas
     await prisma.utilizador.update({
       where: { usuarioID },
       data: { moedas: usuario.moedas - 5 }
     });
 
+    // 8️⃣ Retornar resposta padronizada
     return res.json({
-      message: "Pista usada! Foram removidas duas opções erradas.",
-      removidas,
+      message: "Pista usada! Duas opções erradas foram removidas.",
+      moedasRestantes: usuario.moedas - 5,
+      opcoesEliminadas: removidas,
       opcoesRestantes
     });
 
@@ -301,6 +302,7 @@ router.post("/usar-pista", autenticarToken, async (req, res) => {
     return res.status(500).json({ error: "Erro ao usar pista." });
   }
 });
+
 
 
 // -----------------
