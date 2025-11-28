@@ -24,12 +24,6 @@ enum Opcao {
   D
 }
 
-enum Raridade {
-  comum
-  rara
-  lendaria
-}
-
 model Utilizador {
   usuarioID    Int       @id @default(autoincrement())
   nomeUsuario  String
@@ -38,18 +32,12 @@ model Utilizador {
   moedas       Int       @default(0)
   xp           Int       @default(0)
   role         Role      @default(jogador)
-  // Progresso — última pergunta vista
+
   perguntaID   Int?
   pergunta     Pergunta? @relation(fields: [perguntaID], references: [perguntaID])
 
-  // Relação com cartas (muitos para muitos através da tabela pivot)
-  cartas UsuarioCarta[]
 
-  // Trocas feitas e recebidas
-  trocasFeitas    Troca[] @relation("TrocasFeitas")
-  trocasRecebidas Troca[] @relation("TrocasRecebidas")
-
-  progresso ProgressoCategoriaRegiao[] 
+  progresso ProgressoCategoriaRegiao[]
 }
 
 model Pergunta {
@@ -60,6 +48,7 @@ model Pergunta {
   opcaoC        String
   opcaoD        String
   opcaoCerta    Opcao
+
   categoriaID   Int
   regiaoID      Int
 
@@ -85,56 +74,15 @@ model Categoria {
   progresso ProgressoCategoriaRegiao[]
 }
 
-model Carta {
-  cartaID   Int      @id @default(autoincrement())
-  nomeCarta String
-  raridade  Raridade
-  descricao String
-  imagem    String
-
-  usuarios         UsuarioCarta[]
-  trocasOferecidas Troca[]        @relation("CartaOferecida")
-  trocasPedidas    Troca[]        @relation("CartaPedida")
-}
-
-model UsuarioCarta {
-  usuarioID  Int
-  cartaID    Int
-  quantidade Int @default(1)
-
-  utilizador Utilizador @relation(fields: [usuarioID], references: [usuarioID])
-  carta      Carta      @relation(fields: [cartaID], references: [cartaID])
-
-  @@id([usuarioID, cartaID])
-}
-
-model Troca {
-  trocaID          Int      @id @default(autoincrement())
-  usuarioDeID      Int
-  usuarioParaID    Int
-  cartaOferecidaID Int
-  cartaPedidaID    Int
-  status           String
-  dataTroca        DateTime @default(now())
-
-  usuarioDe   Utilizador @relation("TrocasFeitas", fields: [usuarioDeID], references: [usuarioID])
-  usuarioPara Utilizador @relation("TrocasRecebidas", fields: [usuarioParaID], references: [usuarioID])
-
-  cartaOferecida Carta @relation("CartaOferecida", fields: [cartaOferecidaID], references: [cartaID])
-  cartaPedida    Carta @relation("CartaPedida", fields: [cartaPedidaID], references: [cartaID])
-}
-
 model ProgressoCategoriaRegiao {
   usuarioID   Int
   regiaoID    Int
   categoriaID Int
   concluido   Boolean @default(false)
 
-  // Relações
   utilizador Utilizador @relation(fields: [usuarioID], references: [usuarioID])
   regiao     Regiao     @relation(fields: [regiaoID], references: [regiaoID])
   categoria  Categoria  @relation(fields: [categoriaID], references: [categoriaID])
 
-  @@id([usuarioID, regiaoID, categoriaID]) // chave primária composta
+  @@id([usuarioID, regiaoID, categoriaID])
 }
-

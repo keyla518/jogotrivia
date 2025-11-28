@@ -29,7 +29,7 @@ router.post("/register", async (req, res) => {
       }
     });
 
-    //  Criar progresso inicial (Algarve desbloqueado, resto bloqueado)
+    // Criar progresso inicial
     const regioes = await prisma.regiao.findMany();
     const categorias = await prisma.categoria.findMany();
 
@@ -40,7 +40,9 @@ router.post("/register", async (req, res) => {
             usuarioID: novoUsuario.usuarioID,
             regiaoID: reg.regiaoID,
             categoriaID: cat.categoriaID,
-            concluido: reg.nomeRegiao !== "Algarve"
+
+            // CORRIGIDO: Algarve = desbloqueado
+            concluido: reg.nomeRegiao === "Algarve"
           }
         });
       }
@@ -65,10 +67,10 @@ router.post("/login", async (req, res) => {
 
   try {
     const user = await prisma.utilizador.findUnique({ where: { email } });
-    if (!user) return res.status(400).json({ error: "Email ou senha incorretos ❌" });
+    if (!user) return res.status(400).json({ error: "Email ou senha incorretos" });
 
     const senhaValida = await bcrypt.compare(palavrapasse, user.palavrapasse);
-    if (!senhaValida) return res.status(400).json({ error: "Email ou senha incorretos ❌" });
+    if (!senhaValida) return res.status(400).json({ error: "Email ou senha incorretos" });
 
     const token = jwt.sign(
       { usuarioID: user.usuarioID, role: user.role },
@@ -83,5 +85,5 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// ✅ EXPORTAR O ROUTER (IMPORTANTE!)
+// EXPORTAR O ROUTER
 export default router;

@@ -1,11 +1,10 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
 import { autenticarToken } from "../middleware/auth.js";
-import { ordemRegioes } from "../config/regioesOrdem.js"; // IDs inteiros
+import { ordemRegioes } from "../config/regioesOrdem.js"; 
 
 const router = express.Router();
 const prisma = new PrismaClient();
-const replay = req.body.replay === true;
 const XP_MINIMO = 50; //Para passar de nivel
 
 
@@ -60,36 +59,38 @@ router.get("/proxima-pergunta", autenticarToken, async (req, res) => {
   }
 });
 
+
 // -----------------
 // ROTA: verificar resposta
 // -----------------
 router.post("/verificar-resposta", autenticarToken, async (req, res) => {
-  const { perguntaID, resposta, tentativa } = req.body;
+  const { perguntaID, resposta, tentativa, replay = false } = req.body;
   const usuarioID = req.user.usuarioID;
-
-  // Segurança: garantir que tentativa é válida
   const tent = Math.max(1, Math.min(parseInt(tentativa || 1), 10));
 
   try {
-    const pergunta = await prisma.pergunta.findUnique({ where: { perguntaID } });
-    if (!pergunta) return res.status(404).json({ error: "Pergunta não encontrada" });
+    const pergunta = await prisma.pergunta.findUnique({
+      where: { perguntaID }
+    });
 
-    const respostaNormalizada = resposta.trim().toUpperCase();
+    if (!pergunta) {
+      return res.status(404).json({ error: "Pergunta não encontrada" });
+    }
 
+    const respostaNormalizada = (resposta || "").trim().toUpperCase();
     const acertou = respostaNormalizada === pergunta.opcaoCerta;
 
     if (!acertou) {
       return res.json({
         correta: false,
-        message: "❌ Resposta errada! Tenta de novo!",
+        message: "❌ Resposta errada! Tenta de novo!"
       });
     }
 
     // ---------------------------
-    // 🎁 RECOMPENSAS AO ACERTAR
+    //  RECOMPENSAS AO ACERTAR
     // ---------------------------
     let moedasGanhas = 0;
-
     if (tent === 1) moedasGanhas = 10;
     else if (tent === 2) moedasGanhas = 7;
     else if (tent === 3) moedasGanhas = 5;
@@ -107,35 +108,22 @@ router.post("/verificar-resposta", autenticarToken, async (req, res) => {
     });
 
     // ---------------------------
-    // ATUALIZAR PROGRESSO
+    // ATUALIZAR PROGRESSO (se não for replay)
     // ---------------------------
-    
-      if (!replay){
-      const progresso = await prisma.progressoCategoriaRegiao.findUnique({
+    if (!replay) {
+      await prisma.progressoCategoriaRegiao.update({
         where: {
           usuarioID_regiaoID_categoriaID: {
             usuarioID,
             regiaoID: pergunta.regiaoID,
             categoriaID: pergunta.categoriaID
           }
-        }
+        },
+        data: { concluido: true }
       });
+    }
 
-      if (progresso) {
-        await prisma.progressoCategoriaRegiao.update({
-          where: {
-            usuarioID_regiaoID_categoriaID: {
-              usuarioID,
-              regiaoID: pergunta.regiaoID,
-              categoriaID: pergunta.categoriaID
-            }
-          },
-          data: { concluido: true }
-        });
-      }
-      }
-
-    // Verificar se faltam categorias na região
+    // Verificar se faltam categorias por concluir na mesma região
     const restantes = await prisma.progressoCategoriaRegiao.findMany({
       where: {
         usuarioID,
@@ -144,39 +132,34 @@ router.post("/verificar-resposta", autenticarToken, async (req, res) => {
       }
     });
 
-    // Se acabou → tentar avançar região (com XP mínimo)
+    // ---------------------------
+    // Se acabou → tentar avançar região
+    // ---------------------------
     if (restantes.length === 0) {
       const indexAtual = ordemRegioes.indexOf(pergunta.regiaoID);
       const proximaRegiaoID = ordemRegioes[indexAtual + 1];
 
-      // Buscar XP do usuário
       const usuario = await prisma.utilizador.findUnique({
         where: { usuarioID },
         select: { xp: true }
       });
 
-      // 1️⃣ Fim de todas as regiões → carta lendária garantida
+      // TERMINOU TODAS AS REGIÕES
       if (!proximaRegiaoID) {
-        
-        const cartaLendaria = await darCartaAoUsuario(usuarioID, "lendaria");
-
         return res.json({
           correta: true,
-          message: "🏁 Acertaste! E terminaste TODAS as regiões!",
+          message: "🏁 Acertaste! Terminaste TODAS as regiões! Parabéns 🎉",
           moedasGanhas,
-          xpGanho,
-          carta: cartaLendaria ? {
-            nome: cartaLendaria.nomeCarta,
-            tipo: "lendaria"
-          } : null
+          xpGanho
         });
       }
 
-      // 2️⃣ Verificar XP mínimo
+      // Verificar XP necessário para avançar
       if (usuario.xp < XP_MINIMO) {
         return res.json({
           correta: true,
-          message: "⚠️ Região concluída, mas precisas de mais XP para avançar!",
+          message:
+            "⚠️ Região concluída, mas precisas de mais XP para avançar!",
           moedasGanhas,
           xpGanho,
           xpAtual: usuario.xp,
@@ -185,55 +168,39 @@ router.post("/verificar-resposta", autenticarToken, async (req, res) => {
         });
       }
 
-      // 3️⃣ XP suficiente → desbloquear e dar carta correta
+      // Criar progresso da próxima região
       const categorias = await prisma.categoria.findMany();
-      for (const cat of categorias) {
-        await prisma.progressoCategoriaRegiao.create({
-          data: {
-            usuarioID,
-            regiaoID: proximaRegiaoID,
-            categoriaID: cat.categoriaID
-          }
-        });
-      }
 
-      // LENDÁRIA se região atual for Açores ou Madeira
-      let cartaRecebida;
-
-      if (REGIOES_LENDARIAS.includes(pergunta.regiaoID)) {
-        cartaRecebida = await darCartaAoUsuario(usuarioID, "lendaria");
-      } else {
-        cartaRecebida = await darCartaAoUsuario(usuarioID, "comum");
-      }
+      await prisma.progressoCategoriaRegiao.createMany({
+        data: categorias.map(cat => ({
+          usuarioID,
+          regiaoID: proximaRegiaoID,
+          categoriaID: cat.categoriaID
+        })),
+        skipDuplicates: true
+      });
 
       return res.json({
         correta: true,
-        message: "🎉 Região concluída! Próxima desbloqueada!",
+        message: "🎉 Região concluída! Próxima região desbloqueada!",
         moedasGanhas,
-        xpGanho,
-        carta: cartaRecebida ? {
-          nome: cartaRecebida.nomeCarta,
-          tipo: cartaRecebida.raridade
-        } : null
+        xpGanho
       });
     }
 
-    // Caso apenas acertou e continua na mesma região
+    // Caso normal: acertou mas ainda há categorias para terminar
     return res.json({
       correta: true,
-      message: "✅ Resposta correta!",
+      message: "Resposta correta!",
       moedasGanhas,
       xpGanho
     });
 
-    } catch (error) {
+  } catch (error) {
     console.log("Erro no endpoint verificar-resposta:", error);
-    res.status(500).json({ error: "Erro ao verificar resposta" });
+    return res.status(500).json({ error: "Erro ao verificar resposta" });
   }
 });
-
-export default router;
-
 
 
 
@@ -247,16 +214,19 @@ router.post("/usar-pista", autenticarToken, async (req, res) => {
   try {
     // 1️⃣ Buscar usuário
     const usuario = await prisma.utilizador.findUnique({
-      where: { usuarioID }
+      where: { usuarioID },
+      select: { moedas: true }
     });
 
-    if (!usuario) return res.status(404).json({ error: "Usuário não encontrado." });
+    if (!usuario) {
+      return res.status(404).json({ error: "Usuário não encontrado." });
+    }
 
     // 2️⃣ Verificar moedas suficientes
     if (usuario.moedas < 5) {
-      return res.status(400).json({ 
-        error: "Moedas insuficientes para usar pista.", 
-        moedasAtuais: usuario.moedas 
+      return res.status(400).json({
+        error: "Moedas insuficientes para usar pista.",
+        moedasAtuais: usuario.moedas
       });
     }
 
@@ -265,17 +235,21 @@ router.post("/usar-pista", autenticarToken, async (req, res) => {
       where: { perguntaID }
     });
 
-    if (!pergunta) return res.status(404).json({ error: "Pergunta não encontrada." });
+    if (!pergunta) {
+      return res.status(404).json({ error: "Pergunta não encontrada." });
+    }
 
-    // 4️⃣ Lista das opções erradas
+    // 4️⃣ Encontrar opções erradas
     const opcoesErradas = ["A", "B", "C", "D"].filter(
       opc => opc !== pergunta.opcaoCerta
     );
 
-    // 5️⃣ Escolher aleatoriamente 2 opções para remover
-    const removidas = opcoesErradas.sort(() => 0.5 - Math.random()).slice(0, 2);
+    // 5️⃣ Remover 2 opções aleatórias
+    const removidas = opcoesErradas
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 2);
 
-    // 6️⃣ Criar novo objeto de opções restantes
+    // 6️⃣ Criar opções restantes
     const opcoesRestantes = {
       A: removidas.includes("A") ? null : pergunta.opcaoA,
       B: removidas.includes("B") ? null : pergunta.opcaoB,
@@ -283,16 +257,17 @@ router.post("/usar-pista", autenticarToken, async (req, res) => {
       D: removidas.includes("D") ? null : pergunta.opcaoD
     };
 
-    // 7️⃣ Descontar 5 moedas
-    await prisma.utilizador.update({
+    // 7️⃣ Descontar moedas (seguro contra race conditions)
+    const usuarioAtualizado = await prisma.utilizador.update({
       where: { usuarioID },
-      data: { moedas: usuario.moedas - 5 }
+      data: { moedas: { decrement: 5 } },
+      select: { moedas: true }
     });
 
-    // 8️⃣ Retornar resposta padronizada
+    // 8️⃣ Resposta final
     return res.json({
       message: "Pista usada! Duas opções erradas foram removidas.",
-      moedasRestantes: usuario.moedas - 5,
+      moedasRestantes: usuarioAtualizado.moedas,
       opcoesEliminadas: removidas,
       opcoesRestantes
     });
@@ -304,39 +279,41 @@ router.post("/usar-pista", autenticarToken, async (req, res) => {
 });
 
 
-
 // -----------------
 // ROTA: perguntas de uma região específica (REPLAY)
 // -----------------
-
 router.get("/perguntas-regiao/:regiaoID", autenticarToken, async (req, res) => {
   const usuarioID = req.user.usuarioID;
   const regiaoID = parseInt(req.params.regiaoID);
 
   try {
-    // Verificar se essa região já foi desbloqueada
+    // 1️⃣ Garantir que a região está desbloqueada para o jogador
     const desbloqueada = await prisma.progressoCategoriaRegiao.findFirst({
       where: { usuarioID, regiaoID }
     });
 
     if (!desbloqueada) {
       return res.status(403).json({
-        error: "❌ Não tens acesso a esta região ainda!"
+        error: "Não tens acesso a esta região ainda!"
       });
     }
 
-    // Buscar perguntas da região inteira
+    // 2️⃣ Buscar todas as perguntas da região
     const perguntas = await prisma.pergunta.findMany({
       where: { regiaoID }
     });
 
     if (perguntas.length === 0) {
-      return res.status(404).json({ error: "Nenhuma pergunta encontrada nesta região." });
+      return res.status(404).json({
+        error: "Nenhuma pergunta encontrada nesta região."
+      });
     }
 
+    // 3️⃣ Selecionar pergunta aleatória
     const pergunta = perguntas[Math.floor(Math.random() * perguntas.length)];
 
-    res.json({
+    // 4️⃣ Resposta final (replay = true → NÃO avança progresso)
+    return res.json({
       replay: true,
       message: "Pergunta carregada para ganhar XP!",
       pergunta: {
@@ -353,6 +330,10 @@ router.get("/perguntas-regiao/:regiaoID", autenticarToken, async (req, res) => {
 
   } catch (error) {
     console.log("Erro ao buscar perguntas de replay:", error);
-    res.status(500).json({ error: "Erro ao carregar perguntas da região" });
+    return res.status(500).json({
+      error: "Erro ao carregar perguntas da região."
+    });
   }
 });
+
+export default router;
