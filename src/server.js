@@ -3,7 +3,6 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import userRoutes from "./routes/user.js";
-import perguntaRoutes from "./routes/perguntaRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import gameRoutes from "./routes/game.js";
 import adminRoutes from "./routes/adminRoutes.js";
@@ -19,7 +18,6 @@ app.use(express.json());
 // Rotas principais do jogo
 app.use("/user", userRoutes);
 app.use("/auth", authRoutes);
-app.use("/api/pergunta", perguntaRoutes);
 app.use("/jogo", gameRoutes);
 app.use("/admin", adminRoutes);
 

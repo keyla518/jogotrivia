@@ -30,14 +30,12 @@ model Utilizador {
   email        String    @unique
   palavrapasse String
   moedas       Int       @default(0)
-  xp           Int       @default(0)
+  pontos       Int       @default(0)
   role         Role      @default(jogador)
 
-  perguntaID   Int?
-  pergunta     Pergunta? @relation(fields: [perguntaID], references: [perguntaID])
-
-
   progresso ProgressoCategoriaRegiao[]
+  tentativas TentativaResposta[]
+
 }
 
 model Pergunta {
@@ -54,9 +52,22 @@ model Pergunta {
 
   categoria Categoria @relation(fields: [categoriaID], references: [categoriaID])
   regiao    Regiao    @relation(fields: [regiaoID], references: [regiaoID])
+  tentativas TentativaResposta[]
 
-  utilizadores Utilizador[]
+
 }
+
+model TentativaResposta {
+  usuarioID  Int
+  perguntaID Int
+  tentativas Int @default(1)
+
+  usuario    Utilizador @relation(fields: [usuarioID], references: [usuarioID])
+  pergunta   Pergunta    @relation(fields: [perguntaID], references: [perguntaID])
+
+  @@id([usuarioID, perguntaID])
+}
+
 
 model Regiao {
   regiaoID   Int    @id @default(autoincrement())

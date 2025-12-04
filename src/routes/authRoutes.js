@@ -13,6 +13,7 @@ const prisma = new PrismaClient();
 // ROTA: REGISTO + PROGRESSO INICIAL
 // ----------------------
 router.post("/register", async (req, res) => {
+    console.log("Body recebido:", req.body);
   const { nomeUsuario, email, palavrapasse } = req.body;
 
   try {
@@ -47,6 +48,9 @@ router.post("/register", async (req, res) => {
         });
       }
     }
+    
+
+    delete novoUsuario.palavrapasse;
 
     res.json({
       message: "Conta criada com sucesso ✅ Progresso inicial configurado!",
