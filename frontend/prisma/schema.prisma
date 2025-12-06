@@ -1,0 +1,88 @@
+// Provider & datasource
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// --------------------------
+// MODELOS
+// --------------------------
+
+enum Role {
+  jogador
+  admin
+}
+
+enum Opcao {
+  A
+  B
+  C
+  D
+}
+
+model Utilizador {
+  usuarioID    Int       @id @default(autoincrement())
+  nomeUsuario  String
+  email        String    @unique
+  palavrapasse String
+  moedas       Int       @default(0)
+  xp           Int       @default(0)
+  role         Role      @default(jogador)
+
+  perguntaID   Int?
+  pergunta     Pergunta? @relation(fields: [perguntaID], references: [perguntaID])
+
+
+  progresso ProgressoCategoriaRegiao[]
+}
+
+model Pergunta {
+  perguntaID    Int    @id @default(autoincrement())
+  textoPergunta String
+  opcaoA        String
+  opcaoB        String
+  opcaoC        String
+  opcaoD        String
+  opcaoCerta    Opcao
+
+  categoriaID   Int
+  regiaoID      Int
+
+  categoria Categoria @relation(fields: [categoriaID], references: [categoriaID])
+  regiao    Regiao    @relation(fields: [regiaoID], references: [regiaoID])
+
+  utilizadores Utilizador[]
+}
+
+model Regiao {
+  regiaoID   Int    @id @default(autoincrement())
+  nomeRegiao String
+
+  perguntas Pergunta[]
+  progresso ProgressoCategoriaRegiao[]
+}
+
+model Categoria {
+  categoriaID   Int    @id @default(autoincrement())
+  nomeCategoria String
+
+  perguntas Pergunta[]
+  progresso ProgressoCategoriaRegiao[]
+}
+
+model ProgressoCategoriaRegiao {
+  usuarioID   Int
+  regiaoID    Int
+  categoriaID Int
+  concluido   Boolean @default(false)
+
+  utilizador Utilizador @relation(fields: [usuarioID], references: [usuarioID])
+  regiao     Regiao     @relation(fields: [regiaoID], references: [regiaoID])
+  categoria  Categoria  @relation(fields: [categoriaID], references: [categoriaID])
+
+  @@id([usuarioID, regiaoID, categoriaID])
+}
