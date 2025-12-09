@@ -2,9 +2,9 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import userRoutes from "./routes/user.js";
+import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
-import gameRoutes from "./routes/game.js";
+import gameRoutes from "./routes/gameRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 
 dotenv.config();
@@ -12,7 +12,10 @@ dotenv.config();
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}));
 app.use(express.json());
 
 // Rotas principais do jogo
@@ -23,11 +26,11 @@ app.use("/admin", adminRoutes);
 
 // Rota teste
 app.get("/", (req, res) => {
-  res.send("Servidor está funcionando ✅");
+  res.send("Servidor está funcionando");
 });
 
 // Iniciar servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando na porta ${PORT}`);
+  console.log(`Servidor rodando na porta ${PORT}`);
 });

@@ -1,29 +1,29 @@
-import express from "express";
 import { PrismaClient } from "@prisma/client";
-import { autenticarToken } from "../middleware/auth.js";
-import { ordemRegioes } from "../config/regioesOrdem.js"; 
+import { ordemRegioes } from "../config/regioesOrdem.js";
 
-const router = express.Router();
 const prisma = new PrismaClient();
-const XP_MINIMO = 50; //Para passar de nivel
+const XP_MINIMO = 50;
 
-
-// -----------------
-// ROTA: próxima pergunta
-// -----------------
-router.get("/proxima-pergunta", autenticarToken, async (req, res) => {
+// -----------------------------
+// 1. PRÓXIMA PERGUNTA
+// -----------------------------
+export const proximaPergunta = async (req, res) => {
   const usuarioID = req.user.usuarioID;
 
   try {
+    // Buscar o próximo progresso não concluído
     const progresso = await prisma.progressoCategoriaRegiao.findFirst({
       where: { usuarioID, concluido: false },
       include: { regiao: true, categoria: true }
     });
 
     if (!progresso) {
-      return res.json({ message: "🎉 Parabéns! Completaste todas as regiões!" });
+      return res.json({
+        message: "🎉 Parabéns! Completaste todas as regiões!"
+      });
     }
 
+    // Buscar perguntas da categoria/região atual
     const perguntas = await prisma.pergunta.findMany({
       where: {
         categoriaID: progresso.categoriaID,
@@ -32,10 +32,14 @@ router.get("/proxima-pergunta", autenticarToken, async (req, res) => {
     });
 
     if (perguntas.length === 0) {
-      return res.status(404).json({ error: "Não há perguntas para esta região/categoria." });
+      return res.status(404).json({
+        error: "Não há perguntas para esta região/categoria."
+      });
     }
 
-    const pergunta = perguntas[Math.floor(Math.random() * perguntas.length)];
+    // Selecionar pergunta aleatória
+    const pergunta =
+      perguntas[Math.floor(Math.random() * perguntas.length)];
 
     res.json({
       message: "Pergunta carregada ✅",
@@ -57,52 +61,45 @@ router.get("/proxima-pergunta", autenticarToken, async (req, res) => {
     console.log("Erro ao carregar próxima pergunta:", error);
     res.status(500).json({ error: "Erro a carregar pergunta" });
   }
-});
+};
 
 
 
-// -----------------
-// ROTA: verificar resposta
-// -----------------
-router.post("/verificar-resposta", autenticarToken, async (req, res) => {
-  const { perguntaID, resposta, } = req.body;
+// -----------------------------
+// 2. VERIFICAR RESPOSTA
+// -----------------------------
+export const verificarResposta = async (req, res) => {
+  const { perguntaID, resposta } = req.body;
   const usuarioID = req.user.usuarioID;
 
-  // Buscar ou criar tentativa
-  let tentativaRegistro = await prisma.tentativaResposta.upsert({
-    where: {
-      usuarioID_perguntaID: {
-        usuarioID,
-        perguntaID
-      }
-    },
-    update: {}, // não incrementa ainda, só ler o valor atual
-    create: {
-      usuarioID,
-      perguntaID,
-      tentativas: 1
-    }
-  });
-
-  // Número da tentativa atual
-  const tent = tentativaRegistro.tentativas;
-
-
-
   try {
+    // Buscar ou criar registro de tentativa
+    const tentativa = await prisma.tentativaResposta.upsert({
+      where: {
+        usuarioID_perguntaID: { usuarioID, perguntaID }
+      },
+      update: {},
+      create: {
+        usuarioID,
+        perguntaID,
+        tentativas: 1
+      }
+    });
+
+    const tent = tentativa.tentativas;
+
     const pergunta = await prisma.pergunta.findUnique({
       where: { perguntaID }
     });
 
-    if (!pergunta) {
+    if (!pergunta)
       return res.status(404).json({ error: "Pergunta não encontrada" });
-    }
 
     const respostaNormalizada = (resposta || "").trim().toUpperCase();
     const acertou = respostaNormalizada === pergunta.opcaoCerta;
 
+    // ❌ RESPOSTA ERRADA
     if (!acertou) {
-      // Incrementa tentativas no banco
       await prisma.tentativaResposta.update({
         where: {
           usuarioID_perguntaID: { usuarioID, perguntaID }
@@ -117,18 +114,16 @@ router.post("/verificar-resposta", autenticarToken, async (req, res) => {
       });
     }
 
+    // 🧹 Se acertou → deletar tentativas
     await prisma.tentativaResposta.delete({
       where: {
         usuarioID_perguntaID: { usuarioID, perguntaID }
       }
     });
 
-
-
-
-    // ---------------------------
-    //  RECOMPENSAS AO ACERTAR
-    // ---------------------------
+    // ----------------------
+    // 🎁 RECOMPENSAS
+    // ----------------------
     let moedasGanhas = 0;
     let pontosGanhos = 0;
 
@@ -146,9 +141,9 @@ router.post("/verificar-resposta", autenticarToken, async (req, res) => {
       }
     });
 
-    // ---------------------------
-    // ATUALIZAR PROGRESSO 
-    // ---------------------------
+    // ----------------------
+    // ATUALIZAR PROGRESSO
+    // ----------------------
     await prisma.progressoCategoriaRegiao.update({
       where: {
         usuarioID_regiaoID_categoriaID: {
@@ -160,7 +155,7 @@ router.post("/verificar-resposta", autenticarToken, async (req, res) => {
       data: { concluido: true }
     });
 
-    // Verificar se faltam categorias por concluir na mesma região
+    // Categorias restantes da mesma região
     const restantes = await prisma.progressoCategoriaRegiao.findMany({
       where: {
         usuarioID,
@@ -169,18 +164,16 @@ router.post("/verificar-resposta", autenticarToken, async (req, res) => {
       }
     });
 
-    // ---------------------------
-    // Se acabou → avançar região
-    // ---------------------------
+    // REGION COMPLETA → desbloquear próxima
     if (restantes.length === 0) {
       const indexAtual = ordemRegioes.indexOf(pergunta.regiaoID);
       const proximaRegiaoID = ordemRegioes[indexAtual + 1];
 
-      // TERMINOU TODAS AS REGIÕES
+      // Terminou TODAS
       if (!proximaRegiaoID) {
         return res.json({
           correta: true,
-          message: "🏁 Acertaste! Terminaste TODAS as regiões! Parabéns 🎉",
+          message: "🏁 Acertaste! Terminaste TODAS as regiões!",
           moedasGanhas,
           pontosGanhos
         });
@@ -206,7 +199,7 @@ router.post("/verificar-resposta", autenticarToken, async (req, res) => {
       });
     }
 
-    // Caso normal: acertou mas ainda há categorias para terminar
+    // Caso normal
     return res.json({
       correta: true,
       message: "Resposta correta!",
@@ -218,57 +211,45 @@ router.post("/verificar-resposta", autenticarToken, async (req, res) => {
     console.log("Erro no endpoint verificar-resposta:", error);
     return res.status(500).json({ error: "Erro ao verificar resposta" });
   }
-});
+};
 
 
 
-
-// -----------------
-// ROTA: usar pista (custa 5 moedas)
-// -----------------
-router.post("/usar-pista", autenticarToken, async (req, res) => {
+// -----------------------------
+// 3. USAR PISTA
+// -----------------------------
+export const usarPista = async (req, res) => {
   const { perguntaID } = req.body;
   const usuarioID = req.user.usuarioID;
 
   try {
-    // 1 Buscar usuário
     const usuario = await prisma.utilizador.findUnique({
       where: { usuarioID },
       select: { moedas: true }
     });
 
-    if (!usuario) {
+    if (!usuario)
       return res.status(404).json({ error: "Usuário não encontrado." });
-    }
 
-    // 2 Verificar moedas suficientes
-    if (usuario.moedas < 5) {
+    if (usuario.moedas < 5)
       return res.status(400).json({
-        error: "Moedas insuficientes para usar pista.",
+        error: "Moedas insuficientes.",
         moedasAtuais: usuario.moedas
       });
-    }
 
-    // 3 Buscar pergunta
-    const pergunta = await prisma.pergunta.findUnique({
-      where: { perguntaID }
-    });
+    const pergunta = await prisma.pergunta.findUnique({ where: { perguntaID } });
 
-    if (!pergunta) {
+    if (!pergunta)
       return res.status(404).json({ error: "Pergunta não encontrada." });
-    }
 
-    // 4 Encontrar opções erradas
     const opcoesErradas = ["A", "B", "C", "D"].filter(
       opc => opc !== pergunta.opcaoCerta
     );
 
-    // 5 Remover 2 opções aleatórias
     const removidas = opcoesErradas
       .sort(() => Math.random() - 0.5)
       .slice(0, 2);
 
-    // 6 Criar opções restantes
     const opcoesRestantes = {
       A: removidas.includes("A") ? null : pergunta.opcaoA,
       B: removidas.includes("B") ? null : pergunta.opcaoB,
@@ -276,25 +257,21 @@ router.post("/usar-pista", autenticarToken, async (req, res) => {
       D: removidas.includes("D") ? null : pergunta.opcaoD
     };
 
-    // 7 Descontar moedas (seguro contra race conditions)
     const usuarioAtualizado = await prisma.utilizador.update({
       where: { usuarioID },
       data: { moedas: { decrement: 5 } },
       select: { moedas: true }
     });
 
-    // 8️⃣ Resposta final
     return res.json({
-      message: "Pista usada! Duas opções erradas foram removidas.",
+      message: "Pista usada!",
       moedasRestantes: usuarioAtualizado.moedas,
       opcoesEliminadas: removidas,
       opcoesRestantes
     });
 
   } catch (error) {
-    console.log("Erro no endpoint /usar-pista:", error);
-    return res.status(500).json({ error: "Erro ao usar pista." });
+    console.log("Erro no endpoint usar-pista:", error);
+    return res.status(500).json({ error: "Erro ao usar pista" });
   }
-});
-
-export default router;
+};

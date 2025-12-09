@@ -1,22 +1,20 @@
-import { useState } from 'react'
-import jogoLogo from './assets/logo 2.png'
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Game from "./pages/Game";
+import Profile from "./pages/Profile";
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export default function App() {
   return (
-    <>
-      <h1>MENTE CRUZADA</h1>
-      <div>
-        <img src={jogoLogo} alt="Logo do jogo" />
-      </div>
-      <div className="btn-home">
-        <button className="btn-login">INICIAR SESSÃO</button>
-        <button className="btn-register">REGISTAR-SE</button>
-      </div>
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/game" element={<Game />} />
+        <Route path="/profile" element={<Profile />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
-
-export default App
