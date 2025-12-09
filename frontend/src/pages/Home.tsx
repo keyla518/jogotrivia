@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import jogoLogo from '../assets/logo 2.png';
-import '../App.css';
+import '../pages/home.css';
 
 export default function Home() {
   const navigate = useNavigate();

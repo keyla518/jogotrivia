@@ -2,6 +2,7 @@ import "./Login.css";
 import navio from "../assets/navio.png";
 import aviao from "../assets/avião.png";
 import linha from "../assets/linha.png";
+import setavoltar from "../assets/setavoltar.svg";
 
 
 export default function Login() {
@@ -9,7 +10,10 @@ export default function Login() {
     <div className="login-container">
 
       {/* Botão voltar */}
-      <button className="btn-back">⬅</button>
+      <button className="btn-back">
+        <img src={setavoltar} alt="Volver" />
+      </button>
+
 
       {/* Painel esquerdo */}
       <div className="left-panel">
