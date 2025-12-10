@@ -37,14 +37,25 @@ export default function Register() {
       {error && <p className="text-red-600 mb-2">{error}</p>}
       {success && <p className="text-green-600 mb-2">{success}</p>}
 
-      <Input placeholder="Nome" onChange={(e) => setNome(e.target.value)} value={nomeUsuario} />
-      <Input placeholder="Email" onChange={(e) => setEmail(e.target.value)} value={email} />
+      <Input
+        placeholder="Nome"
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNome(e.target.value)}
+        value={nomeUsuario}
+      />
+
+      <Input
+        placeholder="Email"
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+        value={email}
+      />
+
       <Input
         type="password"
         placeholder="Palavra-passe"
-        onChange={(e) => setSenha(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSenha(e.target.value)}
         value={palavrapasse}
       />
+
 
       <Button onClick={handleRegister} disabled={loading}>
         {loading ? "Registrando..." : "Registrar"}
