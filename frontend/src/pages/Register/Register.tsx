@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Input from "../components/Input";
-import Button from "../components/Button";
-import { registerUser } from "../api/auth";
+import Input from "../../components/Input";
+import Button from "../../components/Button";
+import { registerUser } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
 
 export default function Register() {

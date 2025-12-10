@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchNextQuestion, verifyAnswer, useHint } from "../api/game";
+import { fetchNextQuestion, verifyAnswer, useHint } from "../../api/game";
 
 export default function Game() {
   const [pergunta, setPergunta] = useState<any>(null);

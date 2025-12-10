@@ -1,0 +1,29 @@
+.menu-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+  font-family: sans-serif;
+}
+
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.menu-buttons button {
+  padding: 15px 30px;
+  font-size: 18px;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  background-color: #0077cc;
+  color: white;
+  transition: background-color 0.2s;
+}
+
+.menu-buttons button:hover {
+  background-color: #005fa3;
+}
