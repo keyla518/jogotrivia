@@ -3,6 +3,7 @@ import Input from "../../components/Input";
 import Button from "../../components/Button";
 import { registerUser } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
+import setavoltar from "../../assets/setavoltar.svg";
 
 export default function Register() {
   const [nomeUsuario, setNome] = useState("");
@@ -32,6 +33,9 @@ export default function Register() {
 
   return (
     <div className="p-4 max-w-sm mx-auto">
+      <button className="btn-back">
+        <img src={setavoltar} alt="Volver" onClick={() => navigate("../")} />
+      </button>
       <h2 className="text-xl mb-3">Criar conta</h2>
 
       {error && <p className="text-red-600 mb-2">{error}</p>}

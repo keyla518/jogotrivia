@@ -6,6 +6,8 @@ import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import gameRoutes from "./routes/gameRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import perguntasRoutes from "./routes/perguntasRoutes.js";
+
 
 dotenv.config();
 
@@ -23,6 +25,8 @@ app.use("/user", userRoutes);
 app.use("/auth", authRoutes);
 app.use("/jogo", gameRoutes);
 app.use("/admin", adminRoutes);
+app.use("/api", perguntasRoutes);
+
 
 // Rota teste
 app.get("/", (req, res) => {

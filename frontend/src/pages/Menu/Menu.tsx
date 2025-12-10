@@ -6,14 +6,17 @@ export default function Menu() {
 
   return (
     <div className="menu-container">
-      <h1>Bem-vindo!</h1>
+      <h1>MENTE CRUZADA</h1>
       <p>Escolha uma opção:</p>
 
       <div className="menu-buttons">
-        <button onClick={() => navigate("/game")}>Jogar</button>
-        <button onClick={() => navigate("/ajustes")}>Ajustes</button>
-        <button onClick={() => navigate("/perfil")}>Perfil</button>
-        <button onClick={() => navigate("/ajuda")}>Ajuda</button>
+        <div className="menu-buttons">
+            <button id="jogar" onClick={() => navigate("/game")}><strong>Jogar</strong></button>
+            <button id="ajustes" onClick={() => navigate("/ajustes")}>Ajustes</button>
+            <button id="perfil" onClick={() => navigate("/perfil")}>Perfil</button>
+            <button id="ajuda" onClick={() => navigate("/ajuda")}>Ajuda</button>
+        </div>
+
       </div>
     </div>
   );

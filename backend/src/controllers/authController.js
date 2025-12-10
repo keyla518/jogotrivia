@@ -59,10 +59,12 @@ export const login = async (req, res) => {
   const { email, palavrapasse } = req.body;
 
   try {
+    // Buscar utilizador por email
     const user = await prisma.utilizador.findUnique({ where: { email } });
     if (!user)
       return res.status(400).json({ error: "Email ou senha incorretos" });
 
+    // Verificar password
     const senhaValida = await bcrypt.compare(palavrapasse, user.palavrapasse);
     if (!senhaValida)
       return res.status(400).json({ error: "Email ou senha incorretos" });
@@ -73,9 +75,11 @@ export const login = async (req, res) => {
       { expiresIn: "2h" }
     );
 
+    //devolver token e role
     return res.json({
       message: "Login efetuado com sucesso",
       token,
+      role: user.role,
     });
   } catch (error) {
     console.log("Erro no login:", error);

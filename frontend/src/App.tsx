@@ -5,8 +5,9 @@ import Register from "./pages/Register/Register";
 import Game from "./pages/Game/Game";
 import Profile from "./pages/Profile/Profile";
 import Menu from "./pages/Menu/Menu";
-// import Ajustes from "./pages/Ajustes/Ajustes";
-// import Ajuda from "./pages/Ajuda/Ajuda";
+import Ajustes from "./pages/Ajustes/Ajustes";
+import Ajuda from "./pages/Ajuda/Ajuda";
+import Perguntas from "./pages/Backoffice/Perguntas/Perguntas";
 
 export default function App() {
   return (
@@ -16,11 +17,11 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/game" element={<Game />} />
-        <Route path="/profile" element={<Profile />} />
         <Route path="/menu" element={<Menu />} />
-        <Route path="/ajustes" element={<div>Ajustes</div>} />
+        <Route path="/ajustes" element={<Ajustes/>} />
         <Route path="/perfil" element={<Profile />} />
-        <Route path="/ajuda" element={<div>Ajuda</div>} />
+        <Route path="/ajuda" element={<Ajuda/>} />
+        <Route path="/backoffice/perguntas" element={<Perguntas />} />
       </Routes>
     </BrowserRouter>
   );

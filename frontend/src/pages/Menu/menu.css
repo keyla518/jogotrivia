@@ -15,7 +15,8 @@
 
 .menu-buttons button {
   padding: 15px 30px;
-  font-size: 18px;
+  font-size: 30px;
+  
   cursor: pointer;
   border: none;
   border-radius: 8px;
@@ -26,4 +27,22 @@
 
 .menu-buttons button:hover {
   background-color: #005fa3;
+}
+
+#jogar {
+  background-color: #FB8500;
+}
+
+#ajustes {
+  background-color: #3FBFD7;
+  font-weight: bold;
+}
+
+#perfil {
+  background-color: #F9C216;
+  font-weight: bolder;
+}
+
+#ajuda {
+  background-color: #133E53;
 }
