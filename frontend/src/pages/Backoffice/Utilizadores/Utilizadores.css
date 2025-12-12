@@ -1,0 +1,48 @@
+.utilizadores-container {
+  padding: 20px;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+.utilizadores-tabela {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.utilizadores-tabela th,
+.utilizadores-tabela td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.admin {
+  font-weight: bold;
+  color: #008000;
+}
+
+.jogador {
+  color: #333;
+}
+
+button {
+  padding: 6px 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+}
+
+.promover {
+  background-color: #0066ff;
+  color: white;
+}
+
+.remover {
+  background-color: crimson;
+  color: white;
+}

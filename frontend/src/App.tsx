@@ -8,6 +8,12 @@ import Menu from "./pages/Menu/Menu";
 import Ajustes from "./pages/Ajustes/Ajustes";
 import Ajuda from "./pages/Ajuda/Ajuda";
 import Perguntas from "./pages/Backoffice/Perguntas/Perguntas";
+import Regioes from "./pages/Backoffice/Regioes/Regioes";
+import Categorias from "./pages/Backoffice/Categorias/Categorias";
+import Utilizadores from "./pages/Backoffice/Utilizadores/Utilizadores";
+import RequireAdmin from "./components/RequireAdmin";
+
+
 
 export default function App() {
   return (
@@ -21,7 +27,10 @@ export default function App() {
         <Route path="/ajustes" element={<Ajustes/>} />
         <Route path="/perfil" element={<Profile />} />
         <Route path="/ajuda" element={<Ajuda/>} />
-        <Route path="/backoffice/perguntas" element={<Perguntas />} />
+        <Route path="/backoffice/perguntas" element={<RequireAdmin><Perguntas /></RequireAdmin>} />
+        <Route path="/backoffice/regioes" element={<RequireAdmin><Regioes /></RequireAdmin>} />
+        <Route path="/backoffice/categorias" element={<RequireAdmin><Categorias /></RequireAdmin>} />
+        <Route path="/backoffice/utilizadores" element={<RequireAdmin><Utilizadores /></RequireAdmin>} />
       </Routes>
     </BrowserRouter>
   );

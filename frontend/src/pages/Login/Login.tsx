@@ -6,6 +6,15 @@ import aviao from "../../assets/avião.png";
 import linha from "../../assets/linha.png";
 import setavoltar from "../../assets/setavoltar.svg";
 import { loginUser } from "../../api/auth";
+import { jwtDecode } from "jwt-decode";
+
+// Adicionar interface para o token decodificado
+interface DecodedToken {
+  role: string;
+  // adicionar outros campos que o token possa ter
+  exp?: number;
+  iat?: number;
+}
 
 export default function Login() {
   const navigate = useNavigate();
@@ -21,17 +30,20 @@ export default function Login() {
 
     try {
       const response = await loginUser({ email, palavrapasse: password });
-      const { token, role } = response.data;
-
+      const token = response.data.token;
       localStorage.setItem("token", token);
 
-      if (role === "admin") {
-        navigate("../backoffice/perguntas");
+      const decoded = jwtDecode<DecodedToken>(token);
+
+      // Navegação mais clara e consistente
+      if (decoded.role === "admin") {
+        navigate("/backoffice/perguntas");
       } else {
-        navigate("../menu");
+        navigate("/menu");
       }
+      
     } catch (err: any) {
-      console.error("Error en login:", err.response?.data || err.message);
+      console.error("Erro no login:", err.response?.data || err.message);
       setError("Email ou palavra-passe incorretos");
     } finally {
       setIsLoading(false);
@@ -40,8 +52,8 @@ export default function Login() {
 
   return (
     <div className="login-container">
-      <button className="btn-back" onClick={() => navigate("../")}>
-        <img src={setavoltar} alt="Volver" />
+      <button className="btn-back" onClick={() => navigate("/")}>
+        <img src={setavoltar} alt="Voltar" />
       </button>
 
       <div className="login-content">
