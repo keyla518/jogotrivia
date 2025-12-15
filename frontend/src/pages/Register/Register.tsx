@@ -1,69 +1,122 @@
 import { useState } from "react";
-import Input from "../../components/Input";
-import Button from "../../components/Button";
-import { registerUser } from "../../api/auth";
+import "./Register.css";
 import { useNavigate } from "react-router-dom";
+import navio from "../../assets/nazare.png";
+import aviao from "../../assets/avião.png";
+import linha from "../../assets/linha.png";
 import setavoltar from "../../assets/setavoltar.svg";
+import { loginUser } from "../../api/auth";
 
 export default function Register() {
-  const [nomeUsuario, setNome] = useState("");
-  const [email, setEmail] = useState("");
-  const [palavrapasse, setSenha] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleRegister = async () => {
-    setLoading(true);
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
     setError("");
-    setSuccess("");
+    setIsLoading(true);
 
     try {
-      const res = await registerUser({ nomeUsuario, email, palavrapasse });
-      setSuccess(res.data.message || "Conta criada com sucesso!");
-      setTimeout(() => navigate("/login"), 1500);
+      const response = await loginUser({ email, palavrapasse: password });
+      const token = response.data.token;
+      localStorage.setItem("token", token);
+
+      
     } catch (err: any) {
-      setError(err.response?.data?.error || "Erro ao registrar");
+      console.error("Erro no login:", err.response?.data || err.message);
+      setError("Email ou palavra-passe incorretos");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="p-4 max-w-sm mx-auto">
-      <button className="btn-back">
-        <img src={setavoltar} alt="Volver" onClick={() => navigate("../")} />
+    <div className="login-container">
+      <button className="btn-back" onClick={() => navigate("/")}>
+        <img src={setavoltar} alt="Voltar" />
       </button>
-      <h2 className="text-xl mb-3">Criar conta</h2>
 
-      {error && <p className="text-red-600 mb-2">{error}</p>}
-      {success && <p className="text-green-600 mb-2">{success}</p>}
+      <div className="login-content">
+        <div className="left-panel">
+          <div className="image-wrapper">
+            <img src={navio} className="navio-img" alt="Navio português" />
+            <div className="fact-box">
+              <h2>Sabias que...?</h2>
+              <p>As maiores ondas do mundo são surfadas em Nazaré.
+                Atinguem mais de 30 metros de altura.
+              </p>
+            </div>
+          </div>
+        </div>
 
-      <Input
-        placeholder="Nome"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNome(e.target.value)}
-        value={nomeUsuario}
-      />
+        <div className="divider">
+          <img src={linha} className="linha" alt="" />
+          <img src={aviao} className="aviao" alt="Avião" />
+        </div>
 
-      <Input
-        placeholder="Email"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-        value={email}
-      />
+        <div className="right-panel">
+          <div className="login-card">
+            <h1>Registo</h1>
 
-      <Input
-        type="password"
-        placeholder="Palavra-passe"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSenha(e.target.value)}
-        value={palavrapasse}
-      />
+            <form onSubmit={handleLogin}>
+              <div className="input-group">
+                <label htmlFor="email">Nome de utilizador</label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="exemplo123"
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+              <div className="input-group">
+                <label htmlFor="email">E-mail</label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="exemplo@email.com"
+                  required
+                  disabled={isLoading}
+                />
+              </div>
 
+              <div className="input-group">
+                <label htmlFor="password">Palavra-passe</label>
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  disabled={isLoading}
+                />
+              </div>
 
-      <Button onClick={handleRegister} disabled={loading}>
-        {loading ? "Registrando..." : "Registrar"}
-      </Button>
+              {error && (
+                <div className="error-message">
+                  <span>⚠️</span> {error}
+                </div>
+              )}
+
+              <button 
+                type="submit" 
+                className="btn-confirm"
+                disabled={isLoading}
+              >
+                {isLoading ? "A entrar..." : "Confirmar"}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

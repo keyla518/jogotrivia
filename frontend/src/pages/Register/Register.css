@@ -1,0 +1,101 @@
+.registo-container {
+  height: 100vh;
+  background: linear-gradient(to bottom, #0b77a8, #2db2d6);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  position: relative;
+  font-family: Arial, sans-serif;
+}
+
+/* Botão voltar */
+.btn-voltar {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  background: #f5c400;
+  border: none;
+  border-radius: 12px;
+  width: 55px;
+  height: 45px;
+  cursor: pointer;
+}
+
+/* Esquerda */
+.registo-esquerda {
+  position: relative;
+  width: 330px;
+}
+
+.imagem-nazare {
+  width: 100%;
+  border-radius: 20px;
+}
+
+.texto-curiosidade {
+  position: absolute;
+  top: 25px;
+  left: 20px;
+  right: 20px;
+  color: white;
+  text-shadow: 2px 2px 6px black;
+}
+
+.texto-curiosidade h2 {
+  font-size: 34px;
+}
+
+.texto-curiosidade p {
+  font-size: 22px;
+  line-height: 1.3;
+}
+
+/* Linha */
+.linha-divisoria {
+  height: 70%;
+}
+
+/* Avião */
+.icone-aviao {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Direita */
+.registo-direita {
+  width: 420px;
+  display: flex;
+  flex-direction: column;
+}
+
+.registo-direita h1 {
+  color: white;
+  font-size: 42px;
+  margin-bottom: 25px;
+}
+
+.registo-direita label {
+  color: white;
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.registo-direita button {
+  margin-top: 20px;
+  height: 50px;
+  font-size: 18px;
+  border-radius: 15px;
+}
+
+/* Mensagens */
+.erro {
+  color: #ffcccc;
+  margin-bottom: 10px;
+}
+
+.sucesso {
+  color: #caffca;
+  margin-bottom: 10px;
+}
