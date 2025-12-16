@@ -68,38 +68,3 @@ export const removerAdmin = async (req, res) => {
   }
 };
 
-/* --------------------------------------------------------
-   BLOQUEAR / DESBLOQUEAR (Opcional)
-   Requiere un campo "ativo" en tu tabela, si quieres usarlo.
--------------------------------------------------------- */
-export const bloquearUtilizador = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const user = await prisma.utilizador.update({
-      where: { usuarioID: Number(id) },
-      data: { ativo: false },
-    });
-
-    res.json({ message: "Utilizador bloqueado.", user });
-  } catch (error) {
-    console.error("Erro ao bloquear:", error);
-    res.status(500).json({ error: "Erro ao bloquear utilizador" });
-  }
-};
-
-export const desbloquearUtilizador = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const user = await prisma.utilizador.update({
-      where: { usuarioID: Number(id) },
-      data: { ativo: true },
-    });
-
-    res.json({ message: "Utilizador desbloqueado.", user });
-  } catch (error) {
-    console.error("Erro ao desbloquear:", error);
-    res.status(500).json({ error: "Erro ao desbloquear utilizador" });
-  }
-};
