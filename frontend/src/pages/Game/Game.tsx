@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { fetchNextQuestion, verifyAnswer, useHint } from "../../api/game";
 import "./Game.css";
+import PortugalMap from "../../components/map/PortugalMap";
+
 
 type Opcoes = Record<string, string | null>;
 
@@ -30,6 +32,8 @@ export default function Game() {
   const [tentativa, setTentativa] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [gameCompleted, setGameCompleted] = useState<boolean>(false);
+  const [regiaoAtual, setRegiaoAtual] = useState<string | null>(null);
+
 
   const carregarPergunta = async () => {
     setFeedback("");
@@ -81,6 +85,13 @@ export default function Game() {
     carregarPergunta();
     carregarUsuario();
   }, []);
+
+  // Actualizar la región actual cuando cambie la pregunta
+  useEffect(() => {
+      if (pergunta?.regiao) {
+          setRegiaoAtual(pergunta.regiao.toLowerCase());
+      }
+  }, [pergunta]);
 
   const enviarResposta = async () => {
     if (!resposta) {
@@ -249,6 +260,15 @@ export default function Game() {
           </div>
         </div>
       </div>
+
+      {/* MAPA */}
+      <PortugalMap
+        currentRegion={regiaoAtual}
+        onRegionClick={(regionId) => {
+          console.log("Região clicada:", regionId);
+        }}
+      />
+
 
       {/* Pergunta */}
       <div className="question-card">

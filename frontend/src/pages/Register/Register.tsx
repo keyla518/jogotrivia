@@ -5,29 +5,32 @@ import navio from "../../assets/nazare.png";
 import aviao from "../../assets/avião.png";
 import linha from "../../assets/linha.png";
 import setavoltar from "../../assets/setavoltar.svg";
-import { loginUser } from "../../api/auth";
+import { registerUser } from "../../api/auth";
 
 export default function Register() {
   const navigate = useNavigate();
+  const [nomeUsuario, setnomeUsuario] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
 
     try {
-      const response = await loginUser({ email, palavrapasse: password });
+      const response = await registerUser({ nomeUsuario, email, palavrapasse: password });
       const token = response.data.token;
       localStorage.setItem("token", token);
 
+      navigate("/login");
+
       
     } catch (err: any) {
-      console.error("Erro no login:", err.response?.data || err.message);
-      setError("Email ou palavra-passe incorretos");
+      console.error("Ocorreu um erro no registro", err.response?.data || err.message);
+      setError(err.response?.data?.message || "Erro no registro");
     } finally {
       setIsLoading(false);
     }
@@ -61,14 +64,14 @@ export default function Register() {
           <div className="login-card">
             <h1>Registo</h1>
 
-            <form onSubmit={handleLogin}>
+            <form onSubmit={handleRegister}>
               <div className="input-group">
-                <label htmlFor="email">Nome de utilizador</label>
+                <label htmlFor="nome">Nome de utilizador</label>
                 <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  id="nomeUsuario"
+                  type="text"
+                  value={nomeUsuario}
+                  onChange={(e) => setnomeUsuario(e.target.value)}
                   placeholder="exemplo123"
                   required
                   disabled={isLoading}
