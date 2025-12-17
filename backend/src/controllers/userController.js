@@ -11,7 +11,7 @@ export const obterPerfil = async (req, res) => {
         nomeUsuario: true,
         email: true,
         moedas: true,
-        xp: true
+        pontos: true
       }
     });
 
@@ -27,5 +27,31 @@ export const obterPerfil = async (req, res) => {
   } catch (error) {
     console.log("Erro ao carregar perfil:", error);
     res.status(500).json({ error: "Erro interno do servidor" });
+  }
+};
+
+
+// endpoint para buscar dados do utilizador:
+export const obterDadosUsuario = async (req, res) => {
+  const usuarioID = req.user.usuarioID;
+
+  try {
+    const usuario = await prisma.utilizador.findUnique({
+      where: { usuarioID },
+      select: { moedas: true, pontos: true, nome: true }
+    });
+
+    if (!usuario) {
+      return res.status(404).json({ error: "Utilizador não encontrado" });
+    }
+
+    res.json({
+      moedas: usuario.moedas,
+      pontos: usuario.pontos,
+      nome: usuario.nome
+    });
+  } catch (error) {
+    console.log("Erro ao obter dados do utilizador:", error);
+    res.status(500).json({ error: "Erro ao carregar dados" });
   }
 };

@@ -100,16 +100,18 @@ export const verificarResposta = async (req, res) => {
 
     // ❌ RESPOSTA ERRADA
     if (!acertou) {
+        const novoNumeroTentativas = tent + 1;
+        
       await prisma.tentativaResposta.update({
         where: {
           usuarioID_perguntaID: { usuarioID, perguntaID }
         },
-        data: { tentativas: { increment: 1 } }
+        data: { tentativas: novoNumeroTentativas }
       });
 
       return res.json({
         correta: false,
-        tentativa: tent,
+        tentativa: novoNumeroTentativas,
         message: "❌ Resposta errada! Tenta de novo!"
       });
     }
@@ -275,3 +277,4 @@ export const usarPista = async (req, res) => {
     return res.status(500).json({ error: "Erro ao usar pista" });
   }
 };
+

@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchNextQuestion, verifyAnswer, useHint } from "../../api/game";
 import "./Game.css";
-import PortugalMap from "../../components/map/PortugalMap";
-
 
 type Opcoes = Record<string, string | null>;
 
@@ -45,7 +43,6 @@ export default function Game() {
 
     try {
       const res = await fetchNextQuestion();
-      console.log("BACKEND RETORNOU:", res.data);
 
       // Verificar si el juego está completo
       if (res.data.message && !res.data.pergunta) {
@@ -66,16 +63,18 @@ export default function Game() {
     }
   };
 
-  // Cargar datos del usuario (moedas y pontos)
+  // Carregar datos do usuario (moedas e pontos)
   const carregarUsuario = async () => {
     try {
-      // Asumiendo que tienes un endpoint para obtener datos del usuario
-      // Si no existe, puedes actualizar estos valores después de cada respuesta
-      const token = localStorage.getItem("token");
-      if (token) {
-        // Aquí deberías hacer una petición para obtener los datos del usuario
-        // Por ahora, los actualizaremos después de cada respuesta correcta
+      const res = await fetch('/api/usuario/dados', { 
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setUsuario({ moedas: data.moedas, pontos: data.pontos });
+    }
     } catch (err) {
       console.error("Erro ao carregar dados do usuário:", err);
     }
@@ -85,13 +84,6 @@ export default function Game() {
     carregarPergunta();
     carregarUsuario();
   }, []);
-
-  // Actualizar la región actual cuando cambie la pregunta
-  useEffect(() => {
-      if (pergunta?.regiao) {
-          setRegiaoAtual(pergunta.regiao.toLowerCase());
-      }
-  }, [pergunta]);
 
   const enviarResposta = async () => {
     if (!resposta) {
@@ -110,7 +102,7 @@ export default function Game() {
         resposta,
       });
 
-      console.log("RESPOSTA DO BACKEND:", res.data);
+      // console.log("RESPOSTA DO BACKEND:", res.data);
 
       // Backend retorna: { correta: boolean, message: string, moedasGanhas?, pontosGanhos?, tentativa? }
       const { correta, message, moedasGanhas, pontosGanhos, tentativa: tentativaAtual } = res.data;
@@ -136,12 +128,8 @@ export default function Game() {
         setFeedbackTipo("error");
         setFeedback(message || "❌ Resposta incorreta! Tenta de novo!");
         
-        // Atualizar tentativa
-        if (tentativaAtual) {
-          setTentativa(tentativaAtual + 1);
-        }
-
-        // Limpar resposta para permitir nova tentativa
+        // Usar a tentativa do backend
+        setTentativa(tentativaAtual || tentativa + 1);
         setResposta("");
       }
 
@@ -260,14 +248,6 @@ export default function Game() {
           </div>
         </div>
       </div>
-
-      {/* MAPA */}
-      <PortugalMap
-        currentRegion={regiaoAtual}
-        onRegionClick={(regionId) => {
-          console.log("Região clicada:", regionId);
-        }}
-      />
 
 
       {/* Pergunta */}

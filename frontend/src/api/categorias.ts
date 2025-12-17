@@ -1,11 +1,6 @@
-import axios from "axios";
-
-const API = "http://localhost:3000/api";
-const token = localStorage.getItem("token");
+import api from "./axiosConfig";
 
 export const getCategorias = async () => {
-  const res = await axios.get(`${API}/categorias`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const res = await api.get("/categorias");
   return res.data;
 };

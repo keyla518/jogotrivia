@@ -4,9 +4,9 @@ export const registerUser = (data: {
   nomeUsuario: string;
   email: string;
   palavrapasse: string;
-}) => api.post("/auth/register", data);
+}) => api.post("api/auth/register", data);
 
 export const loginUser = (data: {
   email: string;
   palavrapasse: string;
-}) => api.post("/auth/login", data);
+}) => api.post("api/auth/login", data);

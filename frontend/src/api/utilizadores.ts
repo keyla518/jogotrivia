@@ -1,33 +1,16 @@
-import axios from "axios";
+import api from "./axiosConfig";
 
-const API_URL = "http://localhost:3000/api/utilizadores";
-
-export async function fetchUtilizadores() {
-  const token = localStorage.getItem("token");
-
-  const response = await axios.get(API_URL, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-
+export const fetchUtilizadores = async () => {
+  const response = await api.get("/utilizadores");
   return response.data;
-}
+};
 
-export async function promoverUtilizador(id: number) {
-  const token = localStorage.getItem("token");
-
-  const response = await axios.put(`${API_URL}/${id}/promover`, {}, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-
+export const promoverUtilizador = async (id: number) => {
+  const response = await api.put(`/utilizadores/${id}/promover`);
   return response.data;
-}
+};
 
-export async function removerAdmin(id: number) {
-  const token = localStorage.getItem("token");
-
-  const response = await axios.put(`${API_URL}/${id}/remover-admin`, {}, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-
+export const removerAdmin = async (id: number) => {
+  const response = await api.put(`/utilizadores/${id}/remover-admin`);
   return response.data;
-}
+};

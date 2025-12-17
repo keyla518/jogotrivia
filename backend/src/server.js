@@ -13,6 +13,7 @@ import utilizadorRoutes from "./routes/utilizadorRoutes.js";
 
 
 
+
 dotenv.config();
 
 const app = express();
@@ -24,21 +25,40 @@ app.use(cors({
 }));
 app.use(express.json());
 
+
+
+
 // Rotas principais do jogo
-app.use("/user", userRoutes);
-app.use("/auth", authRoutes);
-app.use("/jogo", gameRoutes);
-app.use("/admin", adminRoutes);
-app.use("/api", perguntasRoutes);
+app.use("/api/auth", authRoutes);
+
+// utilizador autenticado
+app.use("/api/utilizador", userRoutes);
+
+// administração (admin)
+app.use("/api/utilizadores", utilizadorRoutes);
+
+// jogo
+app.use("/api/jogo", gameRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/perguntas", perguntasRoutes);
 app.use("/api/regioes", regiaoRoutes);
 app.use("/api/categorias", categoriaRoutes);
-app.use("/api/utilizadores", utilizadorRoutes);
+
+// app.use("/user", userRoutes);
+// app.use("/auth", authRoutes);
+// app.use("/jogo", gameRoutes);
+// app.use("/admin", adminRoutes);
+// app.use("/api", perguntasRoutes);
+// app.use("/api/regioes", regiaoRoutes);
+// app.use("/api/categorias", categoriaRoutes);
+// app.use("/api/utilizadores", utilizadorRoutes);
+// app.use("/api/utilizador", userRoutes);
 
 
 
 // Rota teste
 app.get("/", (req, res) => {
-  res.send("Servidor está funcionando");
+  res.send("Servidor esta a funcionar");
 });
 
 // Iniciar servidor

@@ -9,9 +9,10 @@ export function autenticarToken(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Agora podemos acessar usuarioID e role
+    req.user = decoded; 
     next();
-  } catch {
+  } catch (error) {
+      console.error("Erro JWT:", error);
     return res.status(403).json({ error: "Token inválido" });
   }
 }
