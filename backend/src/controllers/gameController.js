@@ -2,7 +2,6 @@ import { PrismaClient } from "@prisma/client";
 import { ordemRegioes } from "../config/regioesOrdem.js";
 
 const prisma = new PrismaClient();
-const XP_MINIMO = 50;
 
 // -----------------------------
 // 1. PRÓXIMA PERGUNTA

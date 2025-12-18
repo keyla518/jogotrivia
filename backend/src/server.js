@@ -10,6 +10,8 @@ import perguntasRoutes from "./routes/perguntasRoutes.js";
 import regiaoRoutes from "./routes/regiaoRoutes.js";
 import categoriaRoutes from "./routes/categoriaRoutes.js";
 import utilizadorRoutes from "./routes/utilizadorRoutes.js";
+import mapaRoutes from "./routes/mapaRoutes.js";
+
 
 
 
@@ -43,6 +45,8 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/perguntas", perguntasRoutes);
 app.use("/api/regioes", regiaoRoutes);
 app.use("/api/categorias", categoriaRoutes);
+app.use("/api/mapa", mapaRoutes);
+
 
 // app.use("/user", userRoutes);
 // app.use("/auth", authRoutes);
