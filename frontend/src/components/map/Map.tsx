@@ -1,60 +1,51 @@
-// PortugalMap.tsx
 import React from "react";
-import { motion } from "framer-motion";
-import { regions } from "./regions";
-import type { Region } from "./regions";
+import type { Regiao } from "../../types/mapa"; //status se for preciso
+import "./map.css"; 
 
+interface MapProps {
+  regioes: Regiao[];
+  onLevelClick?: (regiao: Regiao) => void;
+  justUnlocked?: boolean; // para animar avatar ao desbloquear
+}
 
-type PortugalMapProps = {
-  currentRegion: string | null;
-  completedRegions?: string[];
-  onRegionClick?: (regionId: string) => void;
-};
-
-const PortugalMap: React.FC<PortugalMapProps> = ({
-  currentRegion,
-  completedRegions = [],
-  onRegionClick,
-}) => {
-  // Coordenadas del avión según currentRegion
-  const planePosition = currentRegion
-    ? (() => {
-        const region = regions.find(r => r.id === currentRegion);
-        return region ? { x: region.labelX, y: region.labelY } : { x: 0, y: 0 };
-      })()
-    : { x: 0, y: 0 };
-
+const Map: React.FC<MapProps> = ({ regioes, onLevelClick, justUnlocked }) => {
   return (
-    <svg
-      viewBox="0 0 1237 1950" // Ajusta según tu canvas de Figma
-      width="100%"
-      height="auto"
-      preserveAspectRatio="xMidYMid meet"
-    >
-      {regions.map((region: Region) =>
-        region.paths.map((pathD, index) => (
-          <path
-            key={`${region.id}-${index}`}
-            d={pathD}
-            fill={completedRegions?.includes(region.id) ? "#4caf50" : region.color}
-            stroke="#333"
-            strokeWidth={2}
-            onClick={() => onRegionClick?.(region.id)}
-          />
-        ))
-      )}
+    <div className="map-container">
+      {regioes.map((regiao, index) => {
+        let className = "";
+        switch (regiao.status) {
+          case "locked":
+            className = "level locked";
+            break;
+          case "current":
+            className = "level current";
+            break;
+          case "completed":
+            className = "level completed";
+            break;
+        }
 
-      {/* Avión animado */}
-      <motion.circle
-        cx={planePosition.x}
-        cy={planePosition.y}
-        r={20} // radio del avión
-        fill="#ff0000"
-        animate={{ cx: planePosition.x, cy: planePosition.y }}
-        transition={{ duration: 1.5, ease: "easeInOut" }}
-      />
-    </svg>
+        return (
+          <div
+            key={regiao.id}
+            className={className}
+            style={{ left: `${index * 100}px`, top: "50px" }} 
+            onClick={() => {
+              if (regiao.status === "current" && onLevelClick) {
+                onLevelClick(regiao);
+              }
+            }}
+          >
+            {/* Avatar animado */}
+            {regiao.status === "current" && justUnlocked && (
+              <div className="avatar">🧍</div>
+            )}
+            <span className="level-label">{regiao.nome || `Região ${regiao.id}`}</span>
+          </div>
+        );
+      })}
+    </div>
   );
 };
 
-export default PortugalMap;
+export default Map;

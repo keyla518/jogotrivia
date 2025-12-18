@@ -12,6 +12,7 @@ import Regioes from "./pages/Backoffice/Regioes/Regioes";
 import Categorias from "./pages/Backoffice/Categorias/Categorias";
 import Utilizadores from "./pages/Backoffice/Utilizadores/Utilizadores";
 import RequireAdmin from "./components/RequireAdmin";
+import MapPage from "./pages/Map/MapPage";
 
 
 
@@ -27,6 +28,7 @@ export default function App() {
         <Route path="/ajustes" element={<Ajustes/>} />
         <Route path="/perfil" element={<Profile />} />
         <Route path="/ajuda" element={<Ajuda/>} />
+        <Route path="/map" element={<MapPage />} />
         <Route path="/backoffice/perguntas" element={<RequireAdmin><Perguntas /></RequireAdmin>} />
         <Route path="/backoffice/regioes" element={<RequireAdmin><Regioes /></RequireAdmin>} />
         <Route path="/backoffice/categorias" element={<RequireAdmin><Categorias /></RequireAdmin>} />

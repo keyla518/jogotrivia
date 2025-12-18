@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { fetchNextQuestion, verifyAnswer, useHint } from "../../api/game";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./Game.css";
 
 type Opcoes = Record<string, string | null>;
@@ -20,6 +21,10 @@ type Usuario = {
   pontos: number;
 };
 
+type LocationState = {
+  regiaoID?: number;
+};
+
 export default function Game() {
   const [pergunta, setPergunta] = useState<PerguntaData | null>(null);
   const [resposta, setResposta] = useState<string>("");
@@ -30,10 +35,14 @@ export default function Game() {
   const [tentativa, setTentativa] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [gameCompleted, setGameCompleted] = useState<boolean>(false);
-  const [regiaoAtual, setRegiaoAtual] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state as LocationState | undefined;
+  const regiaoID = state?.regiaoID;
+    
 
+  const carregarPergunta = useCallback(async (regiaoIDParam?: number) => {
 
-  const carregarPergunta = async () => {
     setFeedback("");
     setFeedbackTipo("");
     setResposta("");
@@ -42,10 +51,11 @@ export default function Game() {
     setIsLoading(true);
 
     try {
-      const res = await fetchNextQuestion();
+      const res = await fetchNextQuestion({ regiaoID: regiaoIDParam });
 
       // Verificar si el juego está completo
       if (res.data.message && !res.data.pergunta) {
+
         setGameCompleted(true);
         setFeedback(res.data.message);
         setFeedbackTipo("success");
@@ -61,10 +71,10 @@ export default function Game() {
     } finally {
       setIsLoading(false);
     }
-  };
+  },[]);
 
   // Carregar datos do usuario (moedas e pontos)
-  const carregarUsuario = async () => {
+  const carregarUsuario = useCallback(async () => {
     try {
       const res = await fetch('/api/usuario/dados', { 
       headers: {
@@ -78,12 +88,13 @@ export default function Game() {
     } catch (err) {
       console.error("Erro ao carregar dados do usuário:", err);
     }
-  };
+  },[]);
 
+  
   useEffect(() => {
-    carregarPergunta();
+    carregarPergunta(regiaoID);
     carregarUsuario();
-  }, []);
+  }, [regiaoID, carregarPergunta, carregarUsuario]); 
 
   const enviarResposta = async () => {
     if (!resposta) {
@@ -102,7 +113,6 @@ export default function Game() {
         resposta,
       });
 
-      // console.log("RESPOSTA DO BACKEND:", res.data);
 
       // Backend retorna: { correta: boolean, message: string, moedasGanhas?, pontosGanhos?, tentativa? }
       const { correta, message, moedasGanhas, pontosGanhos, tentativa: tentativaAtual } = res.data;
@@ -110,6 +120,26 @@ export default function Game() {
       if (correta) {
         setFeedbackTipo("success");
         setFeedback(message || "✅ Resposta correta!");
+
+        const regionCompleted =
+          message?.includes("Região concluída") ||
+          message?.includes("Próxima região desbloqueada");
+
+        const finishedAll =
+          message?.includes("Terminaste TODAS");
+
+        if (finishedAll) {
+          setGameCompleted(true);
+          return;
+        }
+
+        if (regionCompleted) {
+          // MAPA
+          setTimeout(() => {
+            navigate("/map", { state: { justUnlocked: true } });
+          }, 1500);
+          return;
+        }
 
         // Atualizar moedas e pontos se foram ganhos
         if (moedasGanhas !== undefined && pontosGanhos !== undefined) {
@@ -121,7 +151,7 @@ export default function Game() {
 
         // Esperar 2 segundos antes de carregar a próxima pergunta
         setTimeout(() => {
-          carregarPergunta();
+          carregarPergunta(regiaoID);
         }, 2000);
       } else {
         // Resposta incorreta
@@ -143,7 +173,7 @@ export default function Game() {
   };
 
   const usarPista = async () => {
-    if (!pergunta) return;
+    if (!pergunta || isLoading || opcoesDesabilitadas.length > 0) return;
 
     setIsLoading(true);
 
