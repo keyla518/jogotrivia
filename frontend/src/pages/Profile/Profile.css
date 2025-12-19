@@ -69,18 +69,10 @@
 .info {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 }
 
-.fa-regular fa-envelope {
-  margin-right: 30px;
-}
-
-.fa-regular, .fa-user {
-  margin-right: 30px;
-}
-
-.fa-regular fa-star {
+.fa-regular, .fa-user, .fa-coins {
   margin-right: 30px;
 }
 

@@ -27,7 +27,7 @@
 /* Container principal */
 .backoffice-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+  background: none;
   position: relative;
 }
 
