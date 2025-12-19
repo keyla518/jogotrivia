@@ -19,13 +19,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+  background: none;
   position: relative;
   overflow: hidden;
   padding: 20px;
 }
-
-
 
 @keyframes pulse {
   0%, 100% { opacity: 0.3; }
@@ -104,7 +102,7 @@
   transform: translateX(-50%);
   text-align: center;
   color: white;
-  background: rgba(0, 0, 0, 0.2);
+  background:none;
   backdrop-filter: blur(1px); 
   padding: 30px 30px;
   border-radius: 15px;
@@ -159,12 +157,11 @@
 .login-card {
   width: 100%;
   max-width: 450px;
-  background: rgba(255, 255, 255, 0.12);
+  background:none;
   backdrop-filter: blur(20px);
   border-radius: 25px;
   padding: 50px 45px;
-  box-shadow: 0 20px 60px var(--shadow);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: none;
   animation: slideInRight 0.6s ease;
 }
 
@@ -191,12 +188,14 @@
 /* Formulario */
 form {
   display: flex;
+  align-items: center;
   flex-direction: column;
   gap: 20px;
 }
 
 .input-group {
   display: flex;
+  width: 450px;
   flex-direction: column;
   gap: 8px;
 }
@@ -255,7 +254,7 @@ input:focus {
 
 /* Botón confirmar */
 .btn-confirm {
-  width: 100%;
+  width: 278px;
   height: 55px;
   padding: 0 30px;
   background: var(--orange);

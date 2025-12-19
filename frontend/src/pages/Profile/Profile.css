@@ -1,0 +1,95 @@
+/* src/pages/Perfil.css */
+
+.perfil-container {
+  max-height: 100vh;
+  background: none;
+  padding: 40px;
+  font-family: Arial, sans-serif;
+  padding-top: 0;
+}
+
+.titulo {
+  text-align: center;
+  font-size: 64px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 3px 3px 0px black;
+  margin-bottom: 30px;
+  -webkit-text-stroke: 1px black;
+}
+
+.perfil-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.foto-perfil {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.foto-placeholder {
+  width: 120px;
+  height: 120px;
+  background: #e0e0e0;
+  border-radius: 20px;
+
+  /* ativa flexbox para centralizar */
+  display: flex;
+  align-items: center;      /* centraliza verticalmente */
+  justify-content: center;  /* centraliza horizontalmente */
+}
+
+.foto-placeholder i {
+  font-size: 48px; /* aumenta o tamanho do ícone */
+  color: #000000;     /* cor opcional */
+  margin: 0; /* remove espaçamento extra */
+}
+
+
+.alterar-foto { 
+    font-size: 15px; 
+    color: white; 
+    cursor: pointer; 
+    margin-top: 10px; 
+} 
+
+.alterar-foto a { 
+    color: inherit; /* herda a cor branca */ 
+    text-decoration: none; /* remove sublinhado padrão */ 
+} 
+
+.alterar-foto a:hover { 
+    text-decoration: underline; /* aparece sublinhado só no hover */ 
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.fa-regular fa-envelope {
+  margin-right: 30px;
+}
+
+.fa-regular, .fa-user {
+  margin-right: 30px;
+}
+
+.fa-regular fa-star {
+  margin-right: 30px;
+}
+
+.info-box {
+  background: #042f44;
+  color: white;
+  padding: 18px 40px;
+  border-radius: 15px;
+  font-size: 20px;
+  min-width: 300px;
+  text-align: center;
+}
