@@ -2,9 +2,13 @@
 
 .ajuda-container {
   min-height: 100vh;
-  padding-top: 0%;
   background: none;
   font-family: Arial, sans-serif;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; /* 👈 ESTA LINHA */
 }
 
 .titulo {
@@ -12,22 +16,22 @@
   font-size: 90px;
   font-weight: bold;
   color: white;
-  text-shadow: 3px 3px 0px black;
   margin-bottom: 10px;
 }
 
 .subtitulo {
   color: white;
   font-size: 28px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .accordion {
-  max-width: 600px;
+  max-width: 700px;
 }
 
 .accordion-item {
   margin-bottom: 15px;
+  width: 600px;
 }
 
 .accordion-header {
@@ -53,6 +57,7 @@
   padding: 15px 20px;
   border-radius: 0 0 8px 8px;
   font-size: 16px;
+  border: none;
 }
 
 .seta {

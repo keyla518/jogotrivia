@@ -7,7 +7,6 @@ export default function Menu() {
   return (
     <div className="menu-container">
       <h1>MENTE CRUZADA</h1>
-      <p>Escolha uma opção:</p>
 
       <div className="menu-buttons">
         <div className="menu-buttons">
@@ -16,7 +15,6 @@ export default function Menu() {
             <button id="perfil" onClick={() => navigate("/perfil")}>Perfil</button>
             <button id="ajuda" onClick={() => navigate("/ajuda")}>Ajuda</button>
         </div>
-
       </div>
     </div>
   );
