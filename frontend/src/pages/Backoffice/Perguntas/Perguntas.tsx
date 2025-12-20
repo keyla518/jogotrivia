@@ -65,6 +65,10 @@ export default function Backoffice() {
         getCategorias(),
       ]);
 
+      console.log("Perguntas recibidas:", resPerguntas); // ← AÑADE ESTO
+      console.log("Regiões:", resRegioes);
+      console.log("Categorias:", resCategorias);
+
       setPerguntas(resPerguntas);
       setRegioes(resRegioes);
       setCategorias(resCategorias);

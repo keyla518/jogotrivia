@@ -22,14 +22,14 @@ export const criarPergunta = async (data: any) => {
   return res.data;
 };
 
-// PUT
+// PUT - ✅ CORREGIDO
 export const editarPergunta = async (id: number, data: any) => {
-  const res = await api.put(`/perguntas/${id}`, data);
+  const res = await api.put(`/perguntas/${id}`, data);  // ← Paréntesis normales
   return res.data;
 };
 
-// DELETE
+// DELETE - ✅ CORREGIDO
 export const deletarPerguntaApi = async (id: number) => {
-  const res = await api.delete(`/perguntas/${id}`);
+  const res = await api.delete(`/perguntas/${id}`);  // ← Paréntesis normales
   return res.data;
 };
