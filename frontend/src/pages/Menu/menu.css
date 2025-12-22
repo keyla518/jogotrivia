@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 0;
+  margin-top: 80px;
   font-family: sans-serif;
   height: 100vh;
 }
@@ -11,15 +11,15 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-  margin-top: 10px;
+  margin-top: 30px;
 }
 
 .menu-buttons button {
   height: 82px;
-  padding: 0 30px; /* remove padding vertical para não somar altura */
+  padding: 0 30px; 
   font-size: 30px;
-  font-family: 'Baloo', cursive; font-weight: 600;
-  text-shadow: 6px 6px 20px rgba(0,0,0,0.5);
+  font-family: 'Baloo 2', cursive; font-weight: 600;
+  text-shadow: 2px 2px 4px black;
 
   cursor: pointer;
   border: none;
