@@ -157,6 +157,13 @@ export default function Game() {
         // Resposta incorreta
         setFeedbackTipo("error");
         setFeedback(message || "❌ Resposta incorreta! Tenta de novo!");
+
+        setTimeout(() => {
+          setFeedback("");
+          setFeedbackTipo("");
+        }, 1500);
+
+
         
         // Usar a tentativa do backend
         setTentativa(tentativaAtual || tentativa + 1);
