@@ -10,7 +10,7 @@ export default function Menu() {
 
       <div className="menu-buttons">
         <div className="menu-buttons">
-            <button id="jogar" onClick={() => navigate("/game")}><strong>Jogar</strong></button>
+            <button id="jogar" onClick={() => navigate("/mapa")}><strong>Jogar</strong></button>
             <button id="ajustes" onClick={() => navigate("/ajustes")}>Ajustes</button>
             <button id="perfil" onClick={() => navigate("/perfil")}>Perfil</button>
             <button id="ajuda" onClick={() => navigate("/ajuda")}>Ajuda</button>

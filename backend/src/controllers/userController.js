@@ -38,7 +38,7 @@ export const obterDadosUsuario = async (req, res) => {
   try {
     const usuario = await prisma.utilizador.findUnique({
       where: { usuarioID },
-      select: { moedas: true, pontos: true, nome: true }
+      select: { moedas: true, pontos: true, nomeUsuario: true }
     });
 
     if (!usuario) {
@@ -48,7 +48,7 @@ export const obterDadosUsuario = async (req, res) => {
     res.json({
       moedas: usuario.moedas,
       pontos: usuario.pontos,
-      nome: usuario.nome
+      nome: usuario.nomeUsuario
     });
   } catch (error) {
     console.log("Erro ao obter dados do utilizador:", error);

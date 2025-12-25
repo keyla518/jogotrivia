@@ -33,7 +33,7 @@ export const promoverAdmin = async (req, res) => {
   try {
     const user = await prisma.utilizador.update({
       where: { usuarioID: Number(id) },
-      data: { role: "administrador" },
+      data: { role: "admin" },
     });
 
     res.json({

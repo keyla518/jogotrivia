@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { fetchNextQuestion, verifyAnswer, useHint } from "../../api/game";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./Game.css";
 
 type Opcoes = Record<string, string | null>;
@@ -21,10 +21,6 @@ type Usuario = {
   pontos: number;
 };
 
-type LocationState = {
-  regiaoID?: number;
-};
-
 export default function Game() {
   const [pergunta, setPergunta] = useState<PerguntaData | null>(null);
   const [resposta, setResposta] = useState<string>("");
@@ -36,13 +32,8 @@ export default function Game() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [gameCompleted, setGameCompleted] = useState<boolean>(false);
   const navigate = useNavigate();
-  const location = useLocation();
-  const state = location.state as LocationState | undefined;
-  const regiaoID = state?.regiaoID;
-    
 
-  const carregarPergunta = useCallback(async (regiaoIDParam?: number) => {
-
+  const carregarPergunta = useCallback(async () => {
     setFeedback("");
     setFeedbackTipo("");
     setResposta("");
@@ -51,11 +42,11 @@ export default function Game() {
     setIsLoading(true);
 
     try {
-      const res = await fetchNextQuestion({ regiaoID: regiaoIDParam });
+      // Não passamos regiaoID - o backend pega automaticamente a região atual do usuário
+      const res = await fetchNextQuestion({});
 
-      // Verificar si el juego está completo
+      // Verificar se o jogo está completo
       if (res.data.message && !res.data.pergunta) {
-
         setGameCompleted(true);
         setFeedback(res.data.message);
         setFeedbackTipo("success");
@@ -71,30 +62,29 @@ export default function Game() {
     } finally {
       setIsLoading(false);
     }
-  },[]);
+  }, []);
 
-  // Carregar datos do usuario (moedas e pontos)
+  // Carregar dados do usuário (moedas e pontos)
   const carregarUsuario = useCallback(async () => {
     try {
       const res = await fetch('/api/usuario/dados', { 
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setUsuario({ moedas: data.moedas, pontos: data.pontos });
       }
-    });
-    if (res.ok) {
-      const data = await res.json();
-      setUsuario({ moedas: data.moedas, pontos: data.pontos });
-    }
     } catch (err) {
       console.error("Erro ao carregar dados do usuário:", err);
     }
-  },[]);
+  }, []);
 
-  
   useEffect(() => {
-    carregarPergunta(regiaoID);
+    carregarPergunta();
     carregarUsuario();
-  }, [regiaoID, carregarPergunta, carregarUsuario]); 
+  }, [carregarPergunta, carregarUsuario]); 
 
   const enviarResposta = async () => {
     if (!resposta) {
@@ -113,7 +103,6 @@ export default function Game() {
         resposta,
       });
 
-
       // Backend retorna: { correta: boolean, message: string, moedasGanhas?, pontosGanhos?, tentativa? }
       const { correta, message, moedasGanhas, pontosGanhos, tentativa: tentativaAtual } = res.data;
 
@@ -121,23 +110,29 @@ export default function Game() {
         setFeedbackTipo("success");
         setFeedback(message || "✅ Resposta correta!");
 
+        // Verificar se completou a região
         const regionCompleted =
           message?.includes("Região concluída") ||
           message?.includes("Próxima região desbloqueada");
 
-        const finishedAll =
-          message?.includes("Terminaste TODAS");
+        // Verificar se terminou TODAS as regiões
+        const finishedAll = message?.includes("Terminaste TODAS");
 
         if (finishedAll) {
+          // Jogo totalmente completo
           setGameCompleted(true);
           return;
         }
 
         if (regionCompleted) {
-          // MAPA
+          // Região completa → redirecionar para o mapa após 2 segundos
           setTimeout(() => {
-            navigate("/map", { state: { justUnlocked: true } });
-          }, 1500);
+            navigate("/mapa", { 
+              state: { 
+                mensagem: "🎉 Parabéns! Nova região desbloqueada!" 
+              } 
+            });
+          }, 2000);
           return;
         }
 
@@ -151,7 +146,7 @@ export default function Game() {
 
         // Esperar 2 segundos antes de carregar a próxima pergunta
         setTimeout(() => {
-          carregarPergunta(regiaoID);
+          carregarPergunta();
         }, 2000);
       } else {
         // Resposta incorreta
@@ -163,8 +158,6 @@ export default function Game() {
           setFeedbackTipo("");
         }, 1500);
 
-
-        
         // Usar a tentativa do backend
         setTentativa(tentativaAtual || tentativa + 1);
         setResposta("");
@@ -186,12 +179,11 @@ export default function Game() {
 
     try {
       const res = await useHint({ perguntaID: pergunta.pergunta.id });
-      console.log("PISTA DO BACKEND:", res.data);
 
       // Backend retorna: { message, moedasRestantes, opcoesEliminadas, opcoesRestantes }
       const { opcoesEliminadas, moedasRestantes, opcoesRestantes } = res.data;
 
-      // Atualizar opciones deshabilitadas
+      // Atualizar opções desabilitadas
       setOpcoesDesabilitadas(opcoesEliminadas);
 
       // Atualizar moedas do usuário
@@ -228,6 +220,10 @@ export default function Game() {
     }
   };
 
+  const voltarAoMapa = () => {
+    navigate("/mapa");
+  };
+
   if (isLoading && !pergunta) {
     return (
       <div className="game-container loading">
@@ -253,6 +249,9 @@ export default function Game() {
               <span className="stat-value">{usuario.pontos} ⭐</span>
             </div>
           </div>
+          <button className="btn-back-menu" onClick={() => navigate("/")}>
+            Voltar ao Menu
+          </button>
         </div>
       </div>
     );
@@ -262,12 +261,20 @@ export default function Game() {
     return (
       <div className="game-container error">
         <p>Erro ao carregar a pergunta</p>
+        <button className="btn-back-menu" onClick={voltarAoMapa}>
+          Voltar ao Mapa
+        </button>
       </div>
     );
   }
 
   return (
     <div className="game-container">
+      {/* Botão voltar ao mapa */}
+      <button className="btn-back-map" onClick={voltarAoMapa}>
+        ← Voltar ao Mapa
+      </button>
+
       {/* Header com informações do jogo */}
       <div className="game-header">
         <div className="region-info">
@@ -285,7 +292,6 @@ export default function Game() {
           </div>
         </div>
       </div>
-
 
       {/* Pergunta */}
       <div className="question-card">

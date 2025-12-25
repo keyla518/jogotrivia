@@ -48,6 +48,7 @@ app.use("/api/categorias", categoriaRoutes);
 app.use("/api/mapa", mapaRoutes);
 
 
+
 // app.use("/user", userRoutes);
 // app.use("/auth", authRoutes);
 // app.use("/jogo", gameRoutes);
