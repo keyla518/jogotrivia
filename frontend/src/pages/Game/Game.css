@@ -15,9 +15,9 @@
 
 /* Container principal */
 .game-container {
-  min-height: 100vh;
+  max-height: 100vh;
   background: none;
-  padding: 20px;
+  padding-top: 0%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -119,12 +119,13 @@
 /* Game header */
 .game-header {
   width: 100%;
+  height: 60px;
   max-width: 800px;
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
   border-radius: 20px;
-  padding: 20px 30px;
-  margin-bottom: 30px;
+  padding: 20px 10px;
+  margin-bottom: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -134,8 +135,8 @@
 
 .region-info {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  flex-direction: row;
+  gap: 6px;
 }
 
 .region-name {
@@ -148,19 +149,21 @@
 
 .category-badge {
   display: inline-block;
-  padding: 6px 14px;
+  padding: 6px 8px;
   background: var(--orange);
   color: var(--white);
   border-radius: 20px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
+  margin-right: 10px;
+  height: 30px;
   width: fit-content;
   box-shadow: 0 2px 8px rgba(251, 133, 0, 0.3);
 }
 
 .user-stats {
   display: flex;
-  gap: 20px;
+  gap: 10px;
 }
 
 .stat {
@@ -168,7 +171,7 @@
   align-items: center;
   gap: 8px;
   background: rgba(255, 255, 255, 0.2);
-  padding: 10px 18px;
+  padding: 5px 9px;
   border-radius: 30px;
   backdrop-filter: blur(5px);
 }
@@ -186,10 +189,11 @@
 /* Question card */
 .question-card {
   width: 100%;
+  height: 30%;
   max-width: 800px;
   background: var(--white);
   border-radius: 20px;
-  padding: 35px 40px;
+  padding: 25px 20px;
   margin-bottom: 30px;
   box-shadow: 0 10px 40px var(--shadow-lg);
   position: relative;
@@ -210,12 +214,12 @@
 .attempt-indicator {
   position: absolute;
   top: 8px;
-  right: 20px;
+  right: 10px;
   background: var(--primary-blue);
   color: var(--white);
-  padding: 6px 14px;
+  padding: 3px 6px;
   border-radius: 20px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -231,14 +235,15 @@
 .options-container {
   width: 100%;
   max-width: 800px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 colunas */
+  gap: 10px;
   margin-bottom: 30px;
 }
 
 .option-button {
   width: 100%;
+  height: 50px;
   background: var(--white);
   border: 3px solid var(--border-gray);
   border-radius: 15px;
@@ -306,21 +311,29 @@
   width: 100%;
   max-width: 800px;
   display: flex;
+  justify-content: space-around;
   gap: 15px;
   margin-bottom: 20px;
 }
 
 .btn-submit,
 .btn-hint {
-  flex: 1;
-  padding: 18px 30px;
+  padding: 5px 12px;
+  height: 50px;
   border: none;
   border-radius: 12px;
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 5px 20px var(--shadow);
+  flex: 0;
+}
+
+.btn-hint {
+  white-space: nowrap;      /* não deixa o texto partir linha */
+  width: fit-content;       /* largura baseada no conteúdo */
+  max-width: 100%;          /* segurança para não estourar */
 }
 
 .btn-submit {
@@ -504,15 +517,16 @@
 
 /* Botão voltar ao mapa */
 .btn-back-map {
-  position: absolute;
+  width: 70px; 
+  height: 40px;
   top: 1rem;
   left: 1rem;
   background: rgba(255, 255, 255, 0.2);
   border: 2px solid rgba(255, 255, 255, 0.5);
   color: white;
-  padding: 0.75rem 1.5rem;
+  padding: 0.4rem 0.8rem;
   border-radius: 10px;
-  font-size: 1rem;
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -557,7 +571,7 @@
 /* Ajustar container para dar espaço ao botão */
 .game-container {
   position: relative;
-  padding-top: 4rem; /* Espaço para o botão voltar */
+  padding-top: 5px;
 }
 
 /* Responsivo */

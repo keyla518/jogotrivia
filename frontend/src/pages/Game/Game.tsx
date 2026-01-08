@@ -270,13 +270,13 @@ export default function Game() {
 
   return (
     <div className="game-container">
-      {/* Botão voltar ao mapa */}
-      <button className="btn-back-map" onClick={voltarAoMapa}>
-        ← Voltar ao Mapa
-      </button>
 
       {/* Header com informações do jogo */}
       <div className="game-header">
+        {/* Botão voltar ao mapa */}
+      <button className="btn-back-map" onClick={voltarAoMapa}>
+        ← 
+      </button>
         <div className="region-info">
           <h2 className="region-name">{pergunta.regiao}</h2>
           <span className="category-badge">{pergunta.categoria}</span>
