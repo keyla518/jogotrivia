@@ -1,6 +1,7 @@
 // src/pages/Ajuda.jsx
 import { useState } from "react";
 import "./Ajuda.css";
+import { useNavigate } from "react-router-dom";
 
 const perguntas = [
   {
@@ -31,6 +32,7 @@ const perguntas = [
 
 export default function Ajuda() {
   const [aberto, setAberto] = useState<number | null>(null);
+  const navigate = useNavigate();
 
     const toggle = (index: number) => {
       setAberto(aberto === index ? null : index);
@@ -38,6 +40,9 @@ export default function Ajuda() {
 
   return (
     <div className="ajuda-container">
+      <button className="btn-back-menu" onClick={() => navigate("/menu")}>
+            ←
+      </button>
       <h1 className="titulo">MENTE CRUZADA</h1>
       <h2 className="subtitulo">Ajuda?</h2>
 

@@ -154,6 +154,26 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
+.btn-back-menu {
+  position: fixed;   /* 👈 FUNDAMENTAL */
+  top: 1rem;
+  left: 1rem;
+
+  width: auto;
+  height: 40px;
+  background: #FFB703;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+}
+
 /* Responsivo */
 @media (max-width: 768px) {
   .mapa-container {

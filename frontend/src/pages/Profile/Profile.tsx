@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 
 interface PerfilUsuario {
@@ -11,6 +12,7 @@ interface PerfilUsuario {
 
 export default function Perfil() {
   const [perfil, setPerfil] = useState<PerfilUsuario | null>(null);
+  const navigate = useNavigate();
 
   // 🔽 PASSO 3 – Buscar dados da API (AQUI)
   useEffect(() => {
@@ -39,6 +41,9 @@ export default function Perfil() {
   // 🔽 JSX vem sempre depois
   return (
     <div className="perfil-container">
+      <button className="btn-back-menu" onClick={() => navigate("/menu")}>
+            ←
+      </button>
       <h1 className="titulo">MENTE CRUZADA</h1>
 
       <div className="perfil-card">

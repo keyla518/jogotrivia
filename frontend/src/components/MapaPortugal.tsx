@@ -113,6 +113,9 @@ export const MapaPortugal: React.FC = () => {
   return (
     <div className="mapa-container">
       <div className="mapa-header">
+        <button className="btn-back-menu" onClick={() => navigate("/menu")}>
+            ←
+      </button>
         <h1>Mapa de Portugal</h1>
         {mapaData?.regiaoAtual && (
           <p className="regiao-atual">

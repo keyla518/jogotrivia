@@ -53,7 +53,7 @@ export default function Login() {
   return (
     <div className="login-container">
       <button className="btn-back" onClick={() => navigate("/")}>
-        <img src={setavoltar} alt="Voltar" />
+        ←
       </button>
 
       <div className="login-content">
