@@ -2,6 +2,10 @@ import { useEffect, useState, useCallback } from "react";
 import { fetchNextQuestion, verifyAnswer, useHint } from "../../api/game";
 import { useNavigate } from "react-router-dom";
 import "./Game.css";
+import bgMusic from "../../assets/bg.mp3";
+import correctSound from "../../assets/correct.wav";
+import wrongSound from "../../assets/wrong.wav";
+import { useRef } from "react";
 
 type Opcoes = Record<string, string | null>;
 
@@ -32,6 +36,24 @@ export default function Game() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [gameCompleted, setGameCompleted] = useState<boolean>(false);
   const navigate = useNavigate();
+  const bgAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    const audio = new Audio(bgMusic);
+    audio.loop = true;
+    audio.volume = 0.4;
+
+    audio.play().catch(() => {
+      console.warn("Autoplay bloqueado — tocará após interação.");
+    });
+
+    bgAudioRef.current = audio;
+
+    return () => {
+      audio.pause();
+      audio.currentTime = 0;
+    };
+  }, []);
 
   const carregarPergunta = useCallback(async () => {
     setFeedback("");
@@ -63,6 +85,17 @@ export default function Game() {
       setIsLoading(false);
     }
   }, []);
+
+  const playCorrect = () => {
+  const audio = new Audio(correctSound);
+  audio.volume = 0.7;
+  audio.play();
+  };
+  const playWrong = () => {
+  const audio = new Audio(wrongSound);
+  audio.volume = 0.7;
+  audio.play();
+  }
 
   // Carregar dados do usuário (moedas e pontos)
   const carregarUsuario = useCallback(async () => {
@@ -107,6 +140,7 @@ export default function Game() {
       const { correta, message, moedasGanhas, pontosGanhos, tentativa: tentativaAtual } = res.data;
 
       if (correta) {
+        playCorrect();
         setFeedbackTipo("success");
         setFeedback(message || "✅ Resposta correta!");
 
@@ -150,6 +184,7 @@ export default function Game() {
         }, 2000);
       } else {
         // Resposta incorreta
+        playWrong();
         setFeedbackTipo("error");
         setFeedback(message || "❌ Resposta incorreta! Tenta de novo!");
 
