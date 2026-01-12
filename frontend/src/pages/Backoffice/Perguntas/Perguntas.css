@@ -314,6 +314,22 @@
   line-height: 1.5;
 }
 
+.subinfo {
+  gap: 10px;
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--text-dark);
+  opacity: 0.7; /* mais discreto para não competir com o texto principal */
+}
+
+.subinfo span {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 3px 10px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+
 .pergunta-actions {
   display: flex;
   gap: 12px;

@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  fetchUtilizadores,
-  promoverUtilizador,
-  removerAdmin,
-} from "../../../api/utilizadores";
+import { fetchUtilizadores } from "../../../api/utilizadores";
 import "./Utilizadores.css";
 
 interface Utilizador {
@@ -30,16 +26,6 @@ export default function Utilizadores() {
     }
   }
 
-  async function handlePromover(id: number) {
-    await promoverUtilizador(id);
-    carregarUtilizadores();
-  }
-
-  async function handleRemoverAdmin(id: number) {
-    await removerAdmin(id);
-    carregarUtilizadores();
-  }
-
   useEffect(() => {
     carregarUtilizadores();
   }, []);
@@ -56,10 +42,9 @@ export default function Utilizadores() {
             <th>ID</th>
             <th>Nome</th>
             <th>Email</th>
-            <th>Role</th>
             <th>Moedas</th>
             <th>Pontos</th>
-            <th>Ações</th>
+            <th>Role</th>
           </tr>
         </thead>
 
@@ -69,28 +54,10 @@ export default function Utilizadores() {
               <td>{u.usuarioID}</td>
               <td>{u.nomeUsuario}</td>
               <td>{u.email}</td>
-              <td className={u.role === "administrador" ? "admin" : "jogador"}>
-                {u.role}
-              </td>
               <td>{u.moedas}</td>
               <td>{u.pontos}</td>
-
-              <td>
-                {u.role === "jogador" ? (
-                  <button
-                    className="promover"
-                    onClick={() => handlePromover(u.usuarioID)}
-                  >
-                    Promover a Admin
-                  </button>
-                ) : (
-                  <button
-                    className="remover"
-                    onClick={() => handleRemoverAdmin(u.usuarioID)}
-                  >
-                    Remover Admin
-                  </button>
-                )}
+              <td className={u.role === "administrador" ? "admin" : "jogador"}>
+                {u.role}
               </td>
             </tr>
           ))}

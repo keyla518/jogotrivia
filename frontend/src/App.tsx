@@ -8,8 +8,6 @@ import Menu from "./pages/Menu/Menu";
 import Ajustes from "./pages/Ajustes/Ajustes";
 import Ajuda from "./pages/Ajuda/Ajuda";
 import Perguntas from "./pages/Backoffice/Perguntas/Perguntas";
-import Regioes from "./pages/Backoffice/Regioes/Regioes";
-import Categorias from "./pages/Backoffice/Categorias/Categorias";
 import Utilizadores from "./pages/Backoffice/Utilizadores/Utilizadores";
 import RequireAdmin from "./components/RequireAdmin";
 import { MapaPage } from "./pages/Map/MapaPage";
@@ -30,8 +28,6 @@ export default function App() {
         <Route path="/ajuda" element={<Ajuda/>} />
         <Route path="/mapa" element={<MapaPage />} />
         <Route path="/backoffice/perguntas" element={<RequireAdmin><Perguntas /></RequireAdmin>} />
-        <Route path="/backoffice/regioes" element={<RequireAdmin><Regioes /></RequireAdmin>} />
-        <Route path="/backoffice/categorias" element={<RequireAdmin><Categorias /></RequireAdmin>} />
         <Route path="/backoffice/utilizadores" element={<RequireAdmin><Utilizadores /></RequireAdmin>} />
       </Routes>
     </BrowserRouter>

@@ -167,11 +167,8 @@ export default function Backoffice() {
         </div>
 
         <nav className="sidebar-nav">
-          <button onClick={() => navigate("/backoffice/perguntas")}>📝 Perguntas</button>
-          <button onClick={() => navigate("/backoffice/regioes")}>🗺️ Regiões</button>
-          <button onClick={() => navigate("/backoffice/categorias")}>📂 Categorias</button>
-          <button onClick={() => navigate("/backoffice/utilizadores")}>👥 Utilizadores</button>
-          <button onClick={() => navigate("/menu")} className="btn-voltar">← Voltar ao Menu</button>
+          <button onClick={() => navigate("/backoffice/perguntas")}>Perguntas</button>
+          <button onClick={() => navigate("/backoffice/utilizadores")}>Utilizadores</button>
         </nav>
       </div>
 
