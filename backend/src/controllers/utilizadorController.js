@@ -25,46 +25,35 @@ export const listarUtilizadores = async (req, res) => {
 };
 
 /* --------------------------------------------------------
-   PROMOVER UTILIZADOR A ADMIN
+   EDITAR UTILIZADOR (NOME E EMAIL)
 -------------------------------------------------------- */
-export const promoverAdmin = async (req, res) => {
+export const editarUtilizador = async (req, res) => {
   const { id } = req.params;
+  const { nomeUsuario, email } = req.body;
 
   try {
-    const user = await prisma.utilizador.update({
+    const utilizador = await prisma.utilizador.update({
       where: { usuarioID: Number(id) },
-      data: { role: "admin" },
+      data: {
+        nomeUsuario,
+        email,
+      },
+      select: {
+        usuarioID: true,
+        nomeUsuario: true,
+        email: true,
+        role: true,
+        moedas: true,
+        pontos: true,
+      },
     });
 
-    res.json({
-      message: "Utilizador promovido para administrador.",
-      user
-    });
+    res.json(utilizador);
   } catch (error) {
-    console.error("Erro ao promover:", error);
-    res.status(500).json({ error: "Erro ao promover utilizador" });
+    console.error("Erro ao editar utilizador:", error);
+    res.status(500).json({ error: "Erro ao editar utilizador" });
   }
 };
 
-/* --------------------------------------------------------
-   DESPROMOVER ADMIN → JOGADOR
--------------------------------------------------------- */
-export const removerAdmin = async (req, res) => {
-  const { id } = req.params;
 
-  try {
-    const user = await prisma.utilizador.update({
-      where: { usuarioID: Number(id) },
-      data: { role: "jogador" },
-    });
-
-    res.json({
-      message: "Administrador despromovido para jogador.",
-      user
-    });
-  } catch (error) {
-    console.error("Erro ao remover admin:", error);
-    res.status(500).json({ error: "Erro ao remover administrador" });
-  }
-};
 

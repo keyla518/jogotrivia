@@ -39,3 +39,70 @@ export const getCategorias = async (req, res) => {
     res.status(500).json({ error: "Erro ao buscar categorias" });
   }
 };
+
+// POST /perguntas
+export const criarPergunta = async (req, res) => {
+  const { textoPergunta, opcaoA, opcaoB, opcaoC, opcaoD, opcaoCerta, regiaoID, categoriaID } = req.body;
+
+  try {
+    const pergunta = await prisma.pergunta.create({
+      data: {
+        textoPergunta,
+        opcaoA,
+        opcaoB,
+        opcaoC,
+        opcaoD,
+        opcaoCerta,
+        regiaoID: Number(regiaoID),
+        categoriaID: Number(categoriaID),
+      },
+    });
+    res.status(201).json(pergunta);
+  } catch (error) {
+    console.error("Erro ao criar pergunta:", error);
+    res.status(500).json({ error: "Erro ao criar pergunta" });
+  }
+};
+
+
+// PUT /perguntas/:id
+export const editarPergunta = async (req, res) => {
+  const { id } = req.params;
+  const { textoPergunta, opcaoA, opcaoB, opcaoC, opcaoD, opcaoCerta, regiaoID, categoriaID } = req.body;
+
+  try {
+    const pergunta = await prisma.pergunta.update({
+      where: { perguntaID: Number(id) },
+      data: {
+        textoPergunta,
+        opcaoA,
+        opcaoB,
+        opcaoC,
+        opcaoD,
+        opcaoCerta,
+        regiaoID: Number(regiaoID),
+        categoriaID: Number(categoriaID),
+      },
+    });
+    res.json(pergunta);
+  } catch (error) {
+    console.error("Erro ao editar pergunta:", error);
+    res.status(500).json({ error: "Erro ao editar pergunta" });
+  }
+};
+
+// DELETE /perguntas/:id
+export const deletarPergunta = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await prisma.pergunta.delete({
+      where: { perguntaID: Number(id) },
+    });
+    res.json({ message: "Pergunta deletada com sucesso." });
+  } catch (error) {
+    console.error("Erro ao deletar pergunta:", error);
+    res.status(500).json({ error: "Erro ao deletar pergunta" });
+  }
+};
+
