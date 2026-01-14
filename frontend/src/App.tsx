@@ -13,7 +13,6 @@ import RequireAdmin from "./components/RequireAdmin";
 import { MapaPage } from "./pages/Map/MapaPage";
 
 
-
 export default function App() {
   return (
     <BrowserRouter>
