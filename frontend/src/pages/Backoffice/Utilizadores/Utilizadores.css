@@ -349,18 +349,25 @@ button:disabled {
   align-items: flex-end;
 }
 
-.filtro-ordenar {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.ordenar-btn {
+  background-color: #FB8500;
+  height: 50px;
+  width: auto;
+  color: white;
+  border: none;
+  padding: 5px 5px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
-.filtro-ordenar label {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--white);
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+
+.ordenar-btn:hover {
+  background-color: #FFB703;
 }
+
 
 .filtro-select {
   padding: 12px 18px;

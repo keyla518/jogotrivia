@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchUtilizadores, updateUtilizador } from "../../../api/utilizadores";
 import "./Utilizadores.css";
 import { useNavigate } from "react-router-dom";
