@@ -155,9 +155,11 @@ export default function Backoffice() {
     <div className="backoffice-container">
 
       {/* Menu hamburguer */}
-      <button className="menu-btn" onClick={() => setMenuOpen(!menuOpen)}>
-        <div className="hamburger"><span></span><span></span><span></span></div>
-      </button>
+      {!menuOpen && (
+        <button className="menu-btn" onClick={() => setMenuOpen(true)}>
+          <div className="hamburger"><span></span><span></span><span></span></div>
+        </button>
+      )}
 
       {/* Sidebar */}
       <div className={`sidebar ${menuOpen ? "open" : ""}`}>
@@ -169,7 +171,9 @@ export default function Backoffice() {
         <nav className="sidebar-nav">
           <button onClick={() => navigate("/backoffice/perguntas")}>Perguntas</button>
           <button onClick={() => navigate("/backoffice/utilizadores")}>Utilizadores</button>
+          <button className="logout-btn" onClick={() => { localStorage.removeItem("token"); navigate("/login")}}>Sair</button>
         </nav>
+            
       </div>
 
       {/* Overlay */}
@@ -205,29 +209,36 @@ export default function Backoffice() {
           </div>
         </div>
 
-        {/* Lista */}
-        <div className="perguntas-list">
+        {/* Tabela */}
+        <div className="perguntas-table-container">
           {isLoading ? (
             <div className="loading">A carregar...</div>
           ) : perguntasFiltradas.length === 0 ? (
             <div className="empty-state">Nenhuma pergunta encontrada</div>
           ) : (
-            perguntasFiltradas.map((p) => (
-              <div key={p.perguntaID} className="pergunta-item">
-                <div className="pergunta-texto">
-                  {p.textoPergunta}
-                  <div className="subinfo">
-                    <span>{p.regiao?.nomeRegiao}</span>
-                    <span>{p.categoria?.nomeCategoria}</span>
-                  </div>
-                </div>
-
-                <div className="pergunta-actions">
-                  <button className="btn-edit" onClick={() => abrirModalEditar(p)}>✏️</button>
-                  <button className="btn-delete" onClick={() => deletarPergunta(p.perguntaID)}>🗑️</button>
-                </div>
-              </div>
-            ))
+            <table className="perguntas-table">
+              <thead>
+                <tr>
+                  <th>Pergunta</th>
+                  <th>Região</th>
+                  <th>Categoria</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {perguntasFiltradas.map((p) => (
+                  <tr key={p.perguntaID}>
+                    <td className="pergunta-texto">{p.textoPergunta}</td>
+                    <td>{p.regiao?.nomeRegiao}</td>
+                    <td>{p.categoria?.nomeCategoria}</td>
+                    <td className="pergunta-actions">
+                      <button className="btn-edit" onClick={() => abrirModalEditar(p)}>✏️</button>
+                      <button className="btn-delete" onClick={() => deletarPergunta(p.perguntaID)}>🗑️</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           )}
         </div>
       </div>

@@ -1,0 +1,37 @@
+[33m564d6a3[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{0}: commit: Atualizações do mapa e remoção do mapa antigo
+[33m7166bb8[m HEAD@{1}: pull: Fast-forward
+[33m4ff0083[m HEAD@{2}: commit: caminhos e titulos
+[33mdee7fd7[m HEAD@{3}: pull --rebase origin main (finish): returning to refs/heads/main
+[33mdee7fd7[m HEAD@{4}: pull --rebase origin main (pick): erro no backoffice correcao
+[33meb96cc6[m HEAD@{5}: pull --rebase origin main (start): checkout eb96cc65a3f8bcfe6c3da82de1f295b86e7ec39a
+[33m260d8ca[m HEAD@{6}: commit: erro no backoffice correcao
+[33mfa9ee90[m HEAD@{7}: commit: correcao de bug
+[33mc977b2e[m HEAD@{8}: commit: correçoes no mapa
+[33ma0ce4ef[m HEAD@{9}: commit: correcao da API
+[33mbb4ee97[m HEAD@{10}: commit: tentativa de mapa4
+[33m0453314[m HEAD@{11}: rebase (finish): returning to refs/heads/main
+[33m0453314[m HEAD@{12}: rebase (continue): Mis cambios locales
+[33mcd55908[m HEAD@{13}: pull --rebase origin main (start): checkout cd55908b062feab87071b75ac2ec7b01ed198ff4
+[33m5a37acc[m HEAD@{14}: commit: Mis cambios locales
+[33m5e269a0[m HEAD@{15}: commit: backoffice ajustado
+[33m062dad5[m HEAD@{16}: checkout: moving from main to main
+[33m062dad5[m HEAD@{17}: reset: moving to 062dad5
+[33mb065e69[m HEAD@{18}: pull: Fast-forward
+[33m062dad5[m HEAD@{19}: commit: backoffice
+[33m38c8103[m HEAD@{20}: commit: reorganizar pages, ajustar css do login, criar menu e jogo
+[33m9453faa[m HEAD@{21}: pull: Fast-forward
+[33me4cef02[m HEAD@{22}: commit: adicionar seta voltar
+[33mbf3c248[m HEAD@{23}: commit (merge): resolviendo conflictos
+[33m56ca4c7[m HEAD@{24}: commit: codigo unido
+[33m8d08621[m HEAD@{25}: pull: Fast-forward
+[33mda18a43[m HEAD@{26}: commit: correcoes
+[33m4f2f771[m HEAD@{27}: commit: Versão inicial limpa sem cartas
+[33m88eb9dd[m HEAD@{28}: rebase (finish): returning to refs/heads/main
+[33m88eb9dd[m HEAD@{29}: rebase (continue): minhas alterações antes de sincronizar
+[33m0771e55[m HEAD@{30}: pull --rebase (start): checkout 0771e551914c4b7b16c9f34934065435fe04018f
+[33ma5d25d5[m HEAD@{31}: commit: minhas alterações antes de sincronizar
+[33m8ef2369[m HEAD@{32}: commit: Atualizado game.js e adicionada pasta utils
+[33m2d249d2[m HEAD@{33}: commit: Modificado game.js con nuevas funcionalidades del juego
+[33m4191092[m HEAD@{34}: commit: mensagem do commit
+[33meb0d3d0[m HEAD@{35}: Branch: renamed refs/heads/master to refs/heads/main
+[33meb0d3d0[m HEAD@{37}: commit (initial): Primeiro commit do projeto
