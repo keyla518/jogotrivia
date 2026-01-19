@@ -3,8 +3,13 @@
   line-height: 1.5;
   font-weight: 400;
 
-  /* color-scheme: light dark; */
-  /* color: rgba(255, 255, 255, 0.87); */
+  --bg-body: linear-gradient(to bottom, #0B7EB9, #2BA2BF);
+  --text-color: white;
+  --h1-shadow: 2px 2px 4px black;
+
+  --btn-login-bg: #FB8500;
+  --btn-register-bg: #F9C216;
+
   background-color: #242424;
 
   font-synthesis: none;
@@ -22,28 +27,9 @@ a:hover {
   color: #535bf2;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-  background:linear-gradient(
-    to bottom,
-    #0B7EB9, /* topo */
-    #2BA2BF  /* base */
-  );
-}
+body { margin: 0; display: flex; place-items: center; min-width: 320px; min-height: 100vh; background: var(--bg-body); }
 
-h1 {
-  font-family: 'Baloo 2', cursive; font-weight: 600; /* semibold */
-  font-size: 90px;
-  line-height: 1.1;
-  color: white;
-  text-shadow: 2px 2px 4px black;
-  
-;
-}
+h1 { font-family: 'Baloo 2', cursive; font-weight: 600; font-size: 90px; line-height: 1.1; color: var(--text-color); text-shadow: var(--h1-shadow); }
 
 .btn-home {
   display: flex;
@@ -68,26 +54,9 @@ h1 {
   transition: border-color 0.25s;
 } */
 
-.btn-login {
-  background-color: #FB8500;
-  height: 80px;
-  color: white;
-  font-weight: bold;
-  padding: 15px 40px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-}
+.btn-login { background-color: var(--btn-login-bg); height: 80px; color: white; font-weight: bold; padding: 15px 40px; border: none; border-radius: 12px; cursor: pointer; }
 
-.btn-register {
-  background-color: #F9C216;
-  height: 80px;
-  font-weight: bold;
-  padding: 15px 40px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-}
+.btn-register { background-color: var(--btn-register-bg); height: 80px; font-weight: bold; padding: 15px 40px; border: none; border-radius: 12px; cursor: pointer; }
 
 button:hover {
   border-color: #646cff;
@@ -109,4 +78,13 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+.dark {
+  --bg-body: linear-gradient(to bottom, #0A0A0A, #1A1A1A);
+  --text-color: #f1f1f1;
+  --h1-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+
+  --btn-login-bg: #C96A00;
+  --btn-register-bg: #C9A200;
 }

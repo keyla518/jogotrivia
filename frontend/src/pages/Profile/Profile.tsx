@@ -41,9 +41,18 @@ export default function Perfil() {
   // 🔽 JSX vem sempre depois
   return (
     <div className="perfil-container">
-      <button className="btn-back-menu" onClick={() => navigate("/menu")}>
-            ←
-      </button>
+      <div className="btn-topo">
+        <button className="btn-back-menu" onClick={() => navigate("/menu")}>
+              ←
+        </button>
+        <button className="logout-btn" onClick={() => {
+                localStorage.removeItem("token");
+                navigate("/login");
+              }}>
+              Sair
+        </button>
+      </div>
+
       <h1 className="titulo">MENTE CRUZADA</h1>
 
       <div className="perfil-card">

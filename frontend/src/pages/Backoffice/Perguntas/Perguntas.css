@@ -219,7 +219,7 @@
 /* Header */
 .backoffice-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   margin-bottom: 30px;
   flex-wrap: wrap;
@@ -227,6 +227,7 @@
 }
 
 .page-title {
+  text-align: center;
   font-size: 48px;
   font-weight: 900;
   color: var(--white);
@@ -235,12 +236,14 @@
 }
 
 .btn-criar {
-  padding: 18px 35px;
+  height: 40px;
+  width: auto;
+  padding: 0 12px;
   background: var(--orange);
   border: none;
-  border-radius: 50px;
+  border-radius: 20px;
   color: var(--white);
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 800;
   cursor: pointer;
   box-shadow: 0 6px 25px rgba(251, 133, 0, 0.4);
