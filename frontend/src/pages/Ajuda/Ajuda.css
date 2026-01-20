@@ -1,92 +1,226 @@
 /* src/pages/Ajuda.css */
-
 .ajuda-container {
   min-height: 100vh;
-  background: none;
-  font-family: Arial, sans-serif;
-
+  font-family: "WORKSANS", sans-serif;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center; /* 👈 ESTA LINHA */
+  align-items: center;
+  padding: 40px 20px;
+  
 }
 
-.titulo {
-  text-align: center;
-  font-size: 90px;
-  font-weight: bold;
-  color: white;
-  margin-bottom: 10px;
+
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.subtitulo {
-  color: white;
-  font-size: 28px;
-  margin-bottom: 20px;
-}
 
-.accordion-header, .accordion-content { color: black; }
 
 .accordion {
   max-width: 700px;
+  width: 100%;
+  animation: fadeIn 0.6s ease-in 0.4s both;
+  
 }
 
 .accordion-item {
   margin-bottom: 15px;
-  width: 600px;
+  width: 100%;
+  animation: slideIn 0.4s ease-out backwards;
+    background-color: #0a4a6b;
+    border-radius: 20px;
+
+  
+}
+
+.accordion-item:nth-child(1) { animation-delay: 0.1s; }
+.accordion-item:nth-child(2) { animation-delay: 0.2s; }
+.accordion-item:nth-child(3) { animation-delay: 0.3s; }
+.accordion-item:nth-child(4) { animation-delay: 0.4s; }
+.accordion-item:nth-child(5) { animation-delay: 0.5s; }
+.accordion-item:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .accordion-header {
   width: 100%;
-  height: 74px;
-  background: #D9D9D9;
-  border: none;
-  border-radius: 10px;
-  padding: 15px 20px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.1) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 20px 25px;
   font-size: 18px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  background-color: #0a4a6b;
+
+
+
+  color: white;
+  display: flex;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+}
+
+.accordion-header::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .accordion-header:hover {
-  background: #d4d4d4;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.15) 100%);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.accordion-content {
-  background: #D9D9D9;
-  padding: 15px 20px;
-  border-radius: 0 0 8px 8px;
-  font-size: 16px;
-  border: none;
+.accordion-header:hover::before {
+  opacity: 1;
+}
+
+.pergunta-texto {
+  color: white;
+  font-weight: 600;
+  text-align: left;
 }
 
 .seta {
-  transition: transform 0.2s ease;
-  color: black;
+  transition: transform 0.3s ease;
+  color: #B02F3D;
+  font-size: 16px;
+  font-weight: bold;
+  min-width: 20px;
+  text-align: center;
 }
 
 .seta.aberto {
   transform: rotate(180deg);
 }
 
-.btn-back-menu {
-  position: fixed;   /* 👈 FUNDAMENTAL */
-  top: 1rem;
-  left: 1rem;
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s ease, opacity 0.4s ease;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border-radius: 0 0 15px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: none;
+  opacity: 0;
+  margin-top: -1px;
 
-  width: auto;
-  height: 40px;
-  background: #FFB703;
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  color: white;
-  padding: 0.4rem 0.8rem;
-  border-radius: 10px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  z-index: 1000;
+
+}
+
+.accordion-content.aberto {
+  max-height: 500px;
+  padding: 20px 25px;
+  opacity: 1;
+  margin-top: 0;
+}
+
+.resposta-texto {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  line-height: 1.6;
+  animation: fadeInContent 0.4s ease-in;
+}
+
+@keyframes fadeInContent {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .titulo {
+    font-size: 60px;
+  }
+
+  .subtitulo {
+    font-size: 24px;
+    margin-bottom: 30px;
+  }
+
+  .accordion {
+    max-width: 100%;
+  }
+
+  .accordion-header {
+    padding: 16px 20px;
+    font-size: 16px;
+  }
+
+  .accordion-content.aberto {
+    padding: 16px 20px;
+  }
+
+  .btn-back-menu {
+    top: 1rem;
+    left: 1rem;
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ajuda-container {
+    padding: 20px 15px;
+  }
+
+  .titulo {
+    font-size: 40px;
+  }
+
+  .subtitulo {
+    font-size: 20px;
+  }
+
+  .accordion-header {
+    padding: 14px 18px;
+    font-size: 15px;
+  }
+
+  .resposta-texto {
+    font-size: 14px;
+  }
 }

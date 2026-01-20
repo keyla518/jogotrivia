@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./Register.css";
 import { useNavigate } from "react-router-dom";
-import navio from "../../assets/nazare.png";
+import navio from "../../assets/canvanazare.png";
 import aviao from "../../assets/avião.png";
 import linha from "../../assets/linha.png";
 import { registerUser } from "../../api/auth";
@@ -86,12 +86,6 @@ export default function Register() {
         <div className="left-panel">
           <div className="image-wrapper">
             <img src={navio} className="navio-img" alt="Navio português" />
-            <div className="fact-box">
-              <h2>Sabias que...?</h2>
-              <p>As maiores ondas do mundo são surfadas em Nazaré.
-                Atinguem mais de 30 metros de altura.
-              </p>
-            </div>
           </div>
         </div>
 

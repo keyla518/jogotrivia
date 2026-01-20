@@ -13,19 +13,23 @@
   --shadow-lg: rgba(0, 0, 0, 0.15);
 }
 
-/* Container principal */
+/* Container principal - CORRIGIDO */
 .game-container {
-  max-height: 100vh;
-  background: none;
-  padding-top: 0%;
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  box-sizing: border-box;
 }
 
 /* Loading state */
 .game-container.loading {
   justify-content: center;
+  align-items: center;
   color: var(--white);
   text-align: center;
 }
@@ -47,6 +51,7 @@
 /* Error state */
 .game-container.error {
   justify-content: center;
+  align-items: center;
   color: var(--white);
   font-size: 18px;
 }
@@ -54,6 +59,7 @@
 /* Completion state */
 .game-container.completed {
   justify-content: center;
+  align-items: center;
 }
 
 .completion-card {
@@ -63,17 +69,19 @@
   text-align: center;
   box-shadow: 0 20px 60px var(--shadow-lg);
   max-width: 500px;
+  width: 100%;
   animation: scaleIn 0.5s ease;
+  box-sizing: border-box;
 }
 
 @keyframes scaleIn {
   from {
-    opacity: 0;
     transform: scale(0.9);
+    opacity: 0;
   }
   to {
-    opacity: 1;
     transform: scale(1);
+    opacity: 1;
   }
 }
 
@@ -93,6 +101,7 @@
   display: flex;
   gap: 20px;
   justify-content: center;
+  margin-bottom: 30px;
 }
 
 .stat-item {
@@ -100,8 +109,9 @@
   flex-direction: column;
   gap: 8px;
   padding: 15px 25px;
-  background: var(--light-gray);
+  background: #d9d9d9;
   border-radius: 12px;
+  box-sizing: border-box;
 }
 
 .stat-label {
@@ -116,11 +126,10 @@
   color: var(--text-dark);
 }
 
-/* Game header */
+/* Game header - CORRIGIDO */
 .game-header {
   width: 100%;
-  height: 60px;
-  max-width: 800px;
+  min-height: 80px;
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
   border-radius: 20px;
@@ -131,12 +140,16 @@
   align-items: center;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 10px 30px var(--shadow);
+  box-sizing: border-box;
 }
 
 .region-info {
   display: flex;
   flex-direction: row;
+  align-items: center;
   gap: 6px;
+  flex: 1;
+  justify-content: center;
 }
 
 .region-name {
@@ -145,20 +158,20 @@
   color: var(--white);
   margin: 0;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  white-space: nowrap;
 }
 
 .category-badge {
-  display: inline-block;
-  padding: 6px 8px;
+  display: inline-flex;
+  padding: 5px 9px;
   background: var(--orange);
   color: var(--white);
   border-radius: 20px;
   font-size: 12px;
   font-weight: 600;
-  margin-right: 10px;
-  height: 30px;
-  width: fit-content;
-  box-shadow: 0 2px 8px rgba(251, 133, 0, 0.3);
+  align-items: center;
+  white-space: nowrap;
+  height: fit-content;
 }
 
 .user-stats {
@@ -174,6 +187,8 @@
   padding: 5px 9px;
   border-radius: 30px;
   backdrop-filter: blur(5px);
+  white-space: nowrap;
+  box-sizing: border-box;
 }
 
 .stat-icon {
@@ -184,30 +199,34 @@
   font-size: 18px;
   font-weight: 700;
   color: var(--white);
+  min-width: 30px;
+  text-align: center;
 }
 
-/* Question card */
+/* Question card - CORRIGIDO */
 .question-card {
   width: 100%;
-  height: 30%;
-  max-width: 800px;
+  min-height: 150px;
   background: var(--white);
   border-radius: 20px;
-  padding: 25px 20px;
+  padding: 40px 25px 25px 25px;
   margin-bottom: 30px;
   box-shadow: 0 10px 40px var(--shadow-lg);
   position: relative;
   animation: slideDown 0.5s ease;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
 }
 
 @keyframes slideDown {
   from {
+    transform: translateY(-20px);
     opacity: 0;
-    transform: translateY(-30px);
   }
   to {
-    opacity: 1;
     transform: translateY(0);
+    opacity: 1;
   }
 }
 
@@ -229,21 +248,22 @@
   line-height: 1.6;
   margin: 0;
   font-weight: 500;
+  width: 100%;
 }
 
-/* Options container */
+/* Options container - CORRIGIDO */
 .options-container {
   width: 100%;
-  max-width: 800px;
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 colunas */
+  grid-template-columns: repeat(2, 1fr);
   gap: 10px;
   margin-bottom: 30px;
 }
 
+/* Option buttons - CORRIGIDO (SEM BORDER NONE NO HOVER) */
 .option-button {
   width: 100%;
-  height: 50px;
+  min-height: 70px;
   background: var(--white);
   border: 3px solid var(--border-gray);
   border-radius: 15px;
@@ -255,30 +275,30 @@
   transition: all 0.3s ease;
   text-align: left;
   font-size: 16px;
+  box-sizing: border-box;
 }
 
-.option-button:hover:not(.disabled):not(:disabled) {
+/* CORRIGIDO: Não remover border no hover */
+.option-button:hover:not(:disabled) {
   border-color: var(--primary-blue);
-  background: rgba(0, 150, 214, 0.05);
-  transform: translateX(5px);
   box-shadow: 0 5px 20px var(--shadow);
-}
-
-.option-button.selected {
-  border-color: var(--primary-blue);
-  background: var(--primary-blue);
-  color: var(--white);
-  box-shadow: 0 8px 25px rgba(0, 150, 214, 0.4);
+  transform: translateY(-2px);
 }
 
 .option-button.disabled {
   opacity: 0.4;
   cursor: not-allowed;
   text-decoration: line-through;
+  pointer-events: none;
+}
+
+.option-button:disabled {
+  cursor: not-allowed;
 }
 
 .option-letter {
   min-width: 40px;
+  width: 40px;
   height: 40px;
   background: var(--orange);
   color: var(--white);
@@ -291,35 +311,60 @@
   flex-shrink: 0;
 }
 
-.option-button.selected .option-letter {
-  background: var(--white);
-  color: var(--primary-blue);
-}
-
 .option-text {
   flex: 1;
   font-weight: 500;
   color: var(--text-dark);
+  line-height: 1.5;
 }
 
-.option-button.selected .option-text {
+/* Resposta correta - verde/azul */
+.option-button.correct {
+  border-color: #00FAA3;
+  background: #00FAA3;
+  color: var(--white);
+  box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+}
+
+.option-button.correct .option-letter {
+  background: var(--white);
+  color: #00FAA3;
+}
+
+.option-button.correct .option-text {
+  color: var(--white);
+}
+
+/* Resposta incorreta - vermelho */
+.option-button.incorrect {
+  border-color: #B02F3D;
+  background: #B02F3D;
+  color: var(--white);
+  box-shadow: 0 8px 25px rgba(244, 67, 54, 0.4);
+}
+
+.option-button.incorrect .option-letter {
+  background: var(--white);
+  color: #B02F3D;
+}
+
+.option-button.incorrect .option-text {
   color: var(--white);
 }
 
 /* Action buttons */
 .action-buttons {
   width: 100%;
-  max-width: 800px;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   gap: 15px;
   margin-bottom: 20px;
 }
 
 .btn-submit,
 .btn-hint {
-  padding: 5px 12px;
-  height: 50px;
+  padding: 12px 24px;
+  min-height: 50px;
   border: none;
   border-radius: 12px;
   font-size: 14px;
@@ -327,13 +372,8 @@
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 5px 20px var(--shadow);
-  flex: 0;
-}
-
-.btn-hint {
-  white-space: nowrap;      /* não deixa o texto partir linha */
-  width: fit-content;       /* largura baseada no conteúdo */
-  max-width: 100%;          /* segurança para não estourar */
+  white-space: nowrap;
+  box-sizing: border-box;
 }
 
 .btn-submit {
@@ -343,8 +383,8 @@
 
 .btn-submit:hover:not(:disabled) {
   background: #059669;
-  transform: translateY(-2px);
   box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
+  transform: translateY(-2px);
 }
 
 .btn-submit:disabled {
@@ -360,8 +400,8 @@
 
 .btn-hint:hover:not(:disabled) {
   background: #f59e0b;
-  transform: translateY(-2px);
   box-shadow: 0 8px 30px rgba(251, 191, 36, 0.4);
+  transform: translateY(-2px);
 }
 
 .btn-hint:disabled {
@@ -376,25 +416,23 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
-  max-width: 800px;
+  max-width: 600px;
+  width: 90%;
   padding: 18px 25px;
   border-radius: 12px;
-
   font-size: 16px;
   font-weight: 600;
   text-align: center;
-
   z-index: 9999;
   box-shadow: 0 5px 20px var(--shadow);
-
   animation: feedbackIn 0.4s ease;
+  box-sizing: border-box;
 }
 
 @keyframes feedbackIn {
   from {
     opacity: 0;
-    transform: translate(-50%, -40%);
+    transform: translate(-50%, -60%);
   }
   to {
     opacity: 1;
@@ -412,6 +450,61 @@
   color: var(--white);
 }
 
+/* Botão voltar ao mapa */
+.btn-back-map {
+  width: 70px;
+  height: 40px;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+.btn-back-map:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateX(-5px);
+}
+
+.btn-back-map:active {
+  transform: translateX(-5px) scale(0.95);
+}
+
+/* Botão no ecrã de conclusão */
+.btn-back-menu {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+}
+
+.btn-back-menu:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.btn-back-menu:active {
+  transform: translateY(0);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .game-container {
@@ -422,6 +515,7 @@
     flex-direction: column;
     gap: 15px;
     padding: 20px;
+    min-height: auto;
   }
 
   .region-info {
@@ -438,19 +532,25 @@
   }
 
   .question-card {
-    padding: 25px 20px;
+    padding: 35px 20px 25px 20px;
   }
 
   .question-text {
     font-size: 18px;
   }
 
+  .options-container {
+    grid-template-columns: 1fr;
+  }
+
   .option-button {
     padding: 15px 18px;
+    min-height: 60px;
   }
 
   .option-letter {
     min-width: 35px;
+    width: 35px;
     height: 35px;
     font-size: 16px;
   }
@@ -468,6 +568,13 @@
     width: 100%;
     padding: 16px 25px;
     font-size: 16px;
+  }
+
+  .btn-back-map {
+    top: 0.5rem;
+    left: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
   }
 }
 
@@ -498,7 +605,7 @@
   }
 
   .question-card {
-    padding: 20px 15px;
+    padding: 30px 15px 20px 15px;
   }
 
   .question-text {
@@ -508,82 +615,5 @@
   .attempt-indicator {
     font-size: 12px;
     padding: 5px 12px;
-  }
-}
-
-/* ===================================
-   ADICIONAR ISTO AO TEU Game.css
-   =================================== */
-
-/* Botão voltar ao mapa */
-.btn-back-map {
-  width: 70px; 
-  height: 40px;
-  top: 1rem;
-  left: 1rem;
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  color: white;
-  padding: 0.4rem 0.8rem;
-  border-radius: 10px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  z-index: 100;
-}
-
-.btn-back-map:hover {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.8);
-  transform: translateX(-5px);
-}
-
-.btn-back-map:active {
-  transform: translateX(-5px) scale(0.95);
-}
-
-/* Botão no ecrã de conclusão */
-.btn-back-menu {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: none;
-  color: white;
-  padding: 1rem 2rem;
-  border-radius: 12px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 2rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-.btn-back-menu:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-}
-
-.btn-back-menu:active {
-  transform: translateY(0);
-}
-
-/* Ajustar container para dar espaço ao botão */
-.game-container {
-  position: relative;
-  padding-top: 5px;
-}
-
-/* Responsivo */
-@media (max-width: 768px) {
-  .btn-back-map {
-    top: 0.5rem;
-    left: 0.5rem;
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-  }
-  
-  .game-container {
-    padding-top: 3rem;
   }
 }

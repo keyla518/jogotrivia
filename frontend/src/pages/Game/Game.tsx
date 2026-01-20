@@ -6,6 +6,8 @@ import bgMusic from "../../assets/bg.mp3";
 import correctSound from "../../assets/correct.wav";
 import wrongSound from "../../assets/wrong.wav";
 import { useRef } from "react";
+import { getProfile } from "../../api/user"; 
+import { BackButton, Button } from "../../components/Button";
 
 type Opcoes = Record<string, string | null>;
 
@@ -37,6 +39,8 @@ export default function Game() {
   const [gameCompleted, setGameCompleted] = useState<boolean>(false);
   const navigate = useNavigate();
   const bgAudioRef = useRef<HTMLAudioElement | null>(null);
+  const [respostaStatus, setRespostaStatus] = useState<"correct" | "incorrect" | "">("");
+
 
   useEffect(() => {
     const audio = new Audio(bgMusic);
@@ -61,6 +65,7 @@ export default function Game() {
     setResposta("");
     setOpcoesDesabilitadas([]);
     setTentativa(1);
+    setRespostaStatus("");
     setIsLoading(true);
 
     try {
@@ -100,14 +105,13 @@ export default function Game() {
   // Carregar dados do usuário (moedas e pontos)
   const carregarUsuario = useCallback(async () => {
     try {
-      const res = await fetch('/api/usuario/dados', { 
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setUsuario({ moedas: data.moedas, pontos: data.pontos });
+      const res = await getProfile(); // ← Usa a função correta
+      
+      if (res.data.usuario) {
+        setUsuario({ 
+          moedas: res.data.usuario.moedas, 
+          pontos: res.data.usuario.pontos 
+        });
       }
     } catch (err) {
       console.error("Erro ao carregar dados do usuário:", err);
@@ -119,12 +123,18 @@ export default function Game() {
     carregarUsuario();
   }, [carregarPergunta, carregarUsuario]); 
 
-  const enviarResposta = async () => {
-    if (!resposta) {
-      setFeedback("⚠️ Seleciona uma opção antes de responder!");
-      setFeedbackTipo("error");
-      return;
-    }
+    const handleSelectOption = async (letra: string) => {
+      if (opcoesDesabilitadas.includes(letra) || isLoading) return;
+      
+      setResposta(letra);
+      
+      setTimeout(async () => {
+        await enviarResposta(letra);
+      }, 300);
+    };
+
+    const enviarResposta = async (respostaSelecionada: string) => {
+    
 
     if (!pergunta) return;
 
@@ -133,67 +143,67 @@ export default function Game() {
     try {
       const res = await verifyAnswer({
         perguntaID: pergunta.pergunta.id,
-        resposta,
+        resposta: respostaSelecionada,
       });
 
-      // Backend retorna: { correta: boolean, message: string, moedasGanhas?, pontosGanhos?, tentativa? }
-      const { correta, message, moedasGanhas, pontosGanhos, tentativa: tentativaAtual } = res.data;
+      const { 
+        correta, 
+        message, 
+        moedasGanhas, 
+        pontosGanhos, 
+        tentativa: tentativaAtual,
+        moedasAtuais,  
+        pontosAtuais   
+      } = res.data;
 
       if (correta) {
         playCorrect();
         setFeedbackTipo("success");
-        setFeedback(message || "✅ Resposta correta!");
+        setRespostaStatus("correct");
+        const recompensaMsg = moedasGanhas && pontosGanhos 
+    ? ` (+${moedasGanhas} 🪙, +${pontosGanhos} ⭐)`
+    : '';
+        setFeedback((message || "✅ Resposta correta!") + recompensaMsg);
 
-        // Verificar se completou a região
-        const regionCompleted =
-          message?.includes("Região concluída") ||
-          message?.includes("Próxima região desbloqueada");
+        if (moedasAtuais !== undefined && pontosAtuais !== undefined) {
+          setUsuario({
+            moedas: moedasAtuais,
+            pontos: pontosAtuais
+          });
+        }
 
-        // Verificar se terminou TODAS as regiões
         const finishedAll = message?.includes("Terminaste TODAS");
-
         if (finishedAll) {
-          // Jogo totalmente completo
           setGameCompleted(true);
+ 
           return;
         }
 
+        const regionCompleted = message?.includes("Região concluída");
         if (regionCompleted) {
-          // Região completa → redirecionar para o mapa após 2 segundos
           setTimeout(() => {
             navigate("/mapa", { 
-              state: { 
-                mensagem: "🎉 Parabéns! Nova região desbloqueada!" 
-              } 
+              state: { mensagem: "🎉 Parabéns! Nova região desbloqueada!" } 
             });
           }, 2000);
           return;
         }
 
-        // Atualizar moedas e pontos se foram ganhos
-        if (moedasGanhas !== undefined && pontosGanhos !== undefined) {
-          setUsuario(prev => ({
-            moedas: prev.moedas + moedasGanhas,
-            pontos: prev.pontos + pontosGanhos
-          }));
-        }
-
-        // Esperar 2 segundos antes de carregar a próxima pergunta
         setTimeout(() => {
           carregarPergunta();
         }, 2000);
+        
       } else {
-        // Resposta incorreta
         playWrong();
         setFeedbackTipo("error");
-        setFeedback(message || "❌ Resposta incorreta! Tenta de novo!");
+        setRespostaStatus("incorrect");
+        setFeedback(message || "❌ Resposta incorreta!");
 
         setTimeout(() => {
           setFeedback("");
           setFeedbackTipo("");
         }, 1500);
 
-        // Usar a tentativa do backend
         setTentativa(tentativaAtual || tentativa + 1);
         setResposta("");
       }
@@ -237,7 +247,7 @@ export default function Game() {
         } : null);
       }
 
-      setFeedback("💡 Pista usada! 2 opções eliminadas (-5 moedas)");
+      setFeedback("Pista usada! 2 opções eliminadas (-5 moedas)");
       setFeedbackTipo("success");
 
       // Limpar feedback após 3 segundos
@@ -255,9 +265,7 @@ export default function Game() {
     }
   };
 
-  const voltarAoMapa = () => {
-    navigate("/mapa");
-  };
+
 
   if (isLoading && !pergunta) {
     return (
@@ -272,7 +280,7 @@ export default function Game() {
     return (
       <div className="game-container completed">
         <div className="completion-card">
-          <h1>🎉 Parabéns!</h1>
+          <h1> Parabéns!</h1>
           <p>{feedback}</p>
           <div className="stats">
             <div className="stat-item">
@@ -284,9 +292,10 @@ export default function Game() {
               <span className="stat-value">{usuario.pontos} ⭐</span>
             </div>
           </div>
-          <button className="btn-back-menu" onClick={() => navigate("/")}>
-            Voltar ao Menu
-          </button>
+                <div className="back-button-container">
+                  <BackButton onClick={() => navigate("/menu")}/>
+                    
+                </div>
         </div>
       </div>
     );
@@ -296,9 +305,9 @@ export default function Game() {
     return (
       <div className="game-container error">
         <p>Erro ao carregar a pergunta</p>
-        <button className="btn-back-menu" onClick={voltarAoMapa}>
-          Voltar ao Mapa
-        </button>
+              <div className="back-button-container">
+        <BackButton onClick={() => navigate("/menu")}/>  
+      </div>
       </div>
     );
   }
@@ -309,12 +318,10 @@ export default function Game() {
       {/* Header com informações do jogo */}
       <div className="game-header">
         {/* Botão voltar ao mapa */}
-      <button className="btn-back-map" onClick={voltarAoMapa}>
-        ← 
-      </button>
+                <span className="category-badge">{pergunta.categoria}</span>
+
         <div className="region-info">
           <h2 className="region-name">{pergunta.regiao}</h2>
-          <span className="category-badge">{pergunta.categoria}</span>
         </div>
         <div className="user-stats">
           <div className="stat">
@@ -342,10 +349,13 @@ export default function Game() {
           texto ? (
             <button
               key={letra}
-              className={`option-button ${resposta === letra ? "selected" : ""} ${
-                opcoesDesabilitadas.includes(letra) ? "disabled" : ""
-              }`}
-              onClick={() => !opcoesDesabilitadas.includes(letra) && !isLoading && setResposta(letra)}
+              className={`option-button 
+                ${resposta === letra ? "selected" : ""}
+                ${opcoesDesabilitadas.includes(letra) ? "disabled" : ""}
+                ${resposta === letra && respostaStatus === "correct" ? "correct" : ""}
+                ${resposta === letra && respostaStatus === "incorrect" ? "incorrect" : ""}
+  `}
+              onClick={() => handleSelectOption(letra)}
               disabled={opcoesDesabilitadas.includes(letra) || isLoading}
             >
               <span className="option-letter">{letra}</span>
@@ -357,22 +367,15 @@ export default function Game() {
 
       {/* Botões de ação */}
       <div className="action-buttons">
-        <button
-          className="btn-submit"
-          onClick={enviarResposta}
-          disabled={isLoading || !resposta}
-        >
-          {isLoading ? "A verificar..." : "Responder"}
-        </button>
 
-        <button
-          className="btn-hint"
+        <Button
+          variant="primary" size="small"
           onClick={usarPista}
           disabled={isLoading || usuario.moedas < 5 || opcoesDesabilitadas.length > 0}
           title={usuario.moedas < 5 ? "Moedas insuficientes (necessário: 5)" : "Eliminar 2 opções incorretas"}
         >
-          💡 Pista (-5 🪙)
-        </button>
+           Dica (-5) 
+        </Button>
       </div>
 
       {/* Feedback */}

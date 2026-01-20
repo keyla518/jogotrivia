@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
-import navio from "../../assets/navio.png";
+import beja from "../../assets/canvabeja.png";
 import aviao from "../../assets/avião.png";
 import linha from "../../assets/linha.png";
 import { loginUser } from "../../api/auth";
@@ -58,11 +58,8 @@ export default function Login() {
       <div className="login-content">
         <div className="left-panel">
           <div className="image-wrapper">
-            <img src={navio} className="navio-img" alt="Navio português" />
-            <div className="fact-box">
-              <h2>Sabias que...?</h2>
-              <p>Portugal foi a primeira potência marítima europeia.</p>
-            </div>
+            <img src={beja} className="beja-img" alt="beja " />
+
           </div>
         </div>
 

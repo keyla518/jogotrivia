@@ -52,7 +52,8 @@
   align-items: center;
 }
 
-.navio-img {
+
+.beja-img {
   width: 100%;
   max-width: 400px;
   height: auto;
@@ -61,20 +62,6 @@
   transition: transform 0.3s ease;
 }
 
-
-.fact-box {
-  position: absolute;
-  bottom: 150px;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  color: white;
-  background:none;
-  backdrop-filter: blur(1px); 
-  padding: 30px 30px;
-  border-radius: 15px;
-  max-width: 90%;
-}
 
 
 .fact-box h2 {
@@ -237,7 +224,7 @@ input:focus {
     gap: 40px;
   }
 
-  .navio-img {
+  .beja-img {
     max-width: 300px;
   }
 
@@ -268,7 +255,7 @@ input:focus {
     padding: 35px 30px;
   }
 
-  .navio-img {
+  .beja-img {
     max-width: 280px;
   }
 
@@ -305,7 +292,7 @@ input:focus {
     font-size: 28px;
   }
 
-  .navio-img {
+  .beja-img {
     max-width: 240px;
   }
 

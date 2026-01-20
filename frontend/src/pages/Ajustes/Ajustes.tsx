@@ -1,6 +1,8 @@
 import "./Ajustes.css";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { Button, BackButton} from "../../components/Button";
+
 
 export default function Ajustes() {
   const navigate = useNavigate();
@@ -18,12 +20,13 @@ export default function Ajustes() {
 
   return (
     <div className="ajustes-container">
-      <button className="btn-back-menu" onClick={() => navigate("/menu")}>
-        ←
-      </button>
+      <div className="back-button-container">
+              <BackButton onClick={() => navigate("/menu")}/>
+                
+            </div>
 
       <h1 className="titulo">MENTE CRUZADA</h1>
-      <h2 className="subtitulo">Ajustes</h2>
+      <h2 >Configurações</h2>
 
       <div className="ajustes-lista">
         <div className="ajuste-item">
@@ -40,7 +43,7 @@ export default function Ajustes() {
           <input type="checkbox" defaultChecked />
         </div>
 
-        <div className="ajuste-item">
+        {/* <div className="ajuste-item">
           <span>Idioma</span>
           <select>
             <option>Português</option>
@@ -51,10 +54,10 @@ export default function Ajustes() {
         <div className="ajuste-item">
           <span>Mostrar dicas automáticas</span>
           <input type="checkbox" />
-        </div>
+        </div> */}
 
-        <div className="ajuste-item botao">
-          <button>Repor definições</button>
+        <div >
+          <Button variant="cancel" size="small">Repor definições</Button>
         </div>
       </div>
     </div>

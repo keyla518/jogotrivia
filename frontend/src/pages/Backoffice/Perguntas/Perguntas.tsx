@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Perguntas.css";
 import { getPerguntas, getRegioes, getCategorias, criarPergunta, editarPergunta, deletarPerguntaApi } from "../../../api/perguntas";
+import { Button } from "../../../components/Button";
 
 type Pergunta = {
   perguntaID: number;
@@ -182,7 +183,7 @@ export default function Backoffice() {
       <div className="perguntas-backoffice-content">
         <div className="perguntas-backoffice-header">
           <h1 className="perguntas-page-title">Perguntas</h1>
-          <button className="perguntas-btn-criar" onClick={abrirModalNovo}>Criar nova</button>
+          <Button variant="action" size="medium" onClick={abrirModalNovo}>Criar Pergunta</Button>
         </div>
 
         {/* Filtros */}
@@ -332,8 +333,8 @@ export default function Backoffice() {
             </select>
 
             <div className="perguntas-modal-actions">
-              <button className="perguntas-btn-save" onClick={salvarPergunta}>Guardar</button>
-              <button className="perguntas-btn-cancel" onClick={() => setShowModal(false)}>Cancelar</button>
+              <Button variant="accept" size="small" onClick={salvarPergunta}>Guardar</Button>
+              <Button variant="cancel" size="small" onClick={() => setShowModal(false)}>Cancelar</Button>
             </div>
           </div>
         </div>

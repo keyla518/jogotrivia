@@ -1,22 +1,4 @@
-/* Variables */
-:root {
-  --primary-blue: #0096d6;
-  --dark-blue: #0069a3;
-  --orange: #fb8500;
-  --yellow: #fbbf24;
-  --green: #10b981;
-  --red: #ef4444;
-  --white: #ffffff;
-  --gray-50: #f9fafb;
-  --gray-100: #f3f4f6;
-  --gray-200: #e5e7eb;
-  --gray-300: #d1d5db;
-  --gray-600: #4b5563;
-  --gray-800: #1f2937;
-  --text-dark: #1f2937;
-  --shadow: rgba(0, 0, 0, 0.1);
-  --shadow-lg: rgba(0, 0, 0, 0.15);
-}
+
 
 /* Container principal */
 .utilizadores-page-container {
@@ -26,6 +8,8 @@
   padding: 30px;
   max-width: 1400px;
   margin: 0 auto;
+
+
 }
 
 .utilizadores-page-title {
@@ -97,6 +81,15 @@
   padding: 12px;
   border-bottom: 1px solid #ddd;
   text-align: left;
+
+}
+
+/* Coluna de ações com largura fixa */
+.utilizadores-tabela th:last-child,
+.utilizadores-tabela td:last-child {
+  width: 120px;
+  min-width: 120px;
+  text-align: center;
 }
 
 .utilizadores-tabela th {
@@ -132,8 +125,8 @@
 
 /* Botão editar */
 .utilizadores-editar {
-  width: 45px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
   border: none;
   border-radius: 8px;
   font-size: 18px;
@@ -196,7 +189,8 @@
 /* Botões de edição */
 .utilizadores-edit-buttons {
   display: flex;
-  gap: 8px;
+  gap: 6px;
+  justify-content: center;
 }
 
 /* Input de edição */
@@ -527,6 +521,7 @@
   .utilizadores-tabela th,
   .utilizadores-tabela td {
     padding: 8px;
+    font-size: 13px;
   }
 
   .utilizadores-edit-buttons {
@@ -537,7 +532,29 @@
   .utilizadores-cancelar {
     width: 100%;
   }
+
+
+  .utilizadores-tabela th:last-child,
+  .utilizadores-tabela td:last-child {
+    width: 100px;
+    min-width: 100px;
+  }
+
+  /* Botões ainda menores em mobile */
+  .utilizadores-salvar,
+  .utilizadores-cancelar {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .utilizadores-editar {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
 }
+
+
 
 @media (max-width: 480px) {
   .utilizadores-page-title {

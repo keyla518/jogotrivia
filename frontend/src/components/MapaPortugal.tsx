@@ -3,8 +3,9 @@ import { getMapaProgresso } from '../api/mapa';
 import { useNavigate } from 'react-router-dom';
 import './MapaPortugal.css';
 import { BackButton } from './Button';
-import { getProfile } from '../api/user'; // ajusta o caminho se necessário
-
+import { getProfile } from '../api/user';
+import Confetti from 'react-confetti';
+import { useWindowSize } from 'react-use';
 
 
 interface RegiaoStatus {
@@ -32,6 +33,7 @@ interface PerfilUsuario {
   pontos: number;
 }
 
+
 const REGIOES_INFO: Record<number, { nome: string; color: string; x: number; y: number }> = {
   1: { nome: 'Algarve', color: '#C286FF', x: 466, y: 1771},
   2: { nome: 'Alentejo', color: '#8ECAE6', x: 776, y: 1378 },
@@ -43,6 +45,8 @@ const REGIOES_INFO: Record<number, { nome: string; color: string; x: number; y: 
 };
 
 const ORDEM_REGIOES = [1, 2, 3, 4, 5, 6, 7];
+
+
 
 const ToastNotification: React.FC<{
   toast: Toast;
@@ -115,6 +119,10 @@ export const MapaPortugal: React.FC = () => {
   const navigate = useNavigate();
   const [perfil, setPerfil] = useState<PerfilUsuario | null>(null);
 
+  
+  const [showConfetti, setShowConfetti] = useState(false);
+  const { width, height } = useWindowSize();
+
 
   const [toasts, setToasts] = useState<Toast[]>([]);
   const showToast = (message: string, type: ToastType) => {
@@ -161,7 +169,9 @@ export const MapaPortugal: React.FC = () => {
     const regiao = mapaData.regioes.find(r => r.id === regiaoId);
     return regiao?.status || 'locked';
   };
+  
 
+  
   
   const handleRegiaoClick = (regiaoId: number) => {
     const status = getRegiaoStatus(regiaoId);
@@ -173,8 +183,13 @@ export const MapaPortugal: React.FC = () => {
       showToast('Esta região ainda está bloqueada! Complete a região anterior primeiro.', 'warning');
     } else if (status === 'completed') {
       showToast('Região já concluída! ', 'success');
+            setShowConfetti(true);
+
     }
   };
+
+
+  
 
   // Função auxiliar para clarear a cor
   const lightenColor = (color: string, amount: number = 0.3): string => {
@@ -277,23 +292,45 @@ export const MapaPortugal: React.FC = () => {
 
   return (
     <div className="mapa-container">
+      {showConfetti && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          pointerEvents: 'none',
+          zIndex: 9999
+        }}>
+          <Confetti
+            width={width}
+            height={height}
+            numberOfPieces={300}
+            recycle={true}
+            colors={['#C286FF', '#8ECAE6', '#EB5B5B', '#003566', '#FFB703', '#006400', '#69EF6B']}
+          />
+        </div>
+      )}
       <div className="mapa-header">
         <div className="back-button-container">
-          <BackButton onClick={() => navigate("/")}/>
+          <BackButton onClick={() => navigate("/menu")}/>
         </div>
+
+
 
         {perfil && (
   <UserStats moedas={perfil.moedas} pontos={perfil.pontos} />
 )}
   
         {mapaData?.regiaoAtual && (
-          <h1 className="regiao-atual">
+          <h1 >
             Região atual: {REGIOES_INFO[mapaData.regiaoAtual].nome}
           </h1>
         )}
       </div>
 
       <ToastContainer toasts={toasts} onClose={closeToast} />
+
 
       <div className="mapa-svg-wrapper">
         <svg  width="100%" height="100%" viewBox="0 0 1179 1904" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -624,6 +661,8 @@ export const MapaPortugal: React.FC = () => {
           </span>
         </div>
       )}
+
+
     </div>
   );
 };
