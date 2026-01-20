@@ -56,12 +56,12 @@
 .beja-img {
   width: 100%;
   max-width: 400px;
+  max-height: 90vh;
   height: auto;
   border-radius: 20px;
   box-shadow: 0 20px 60px var(--shadow);
   transition: transform 0.3s ease;
 }
-
 
 
 .fact-box h2 {

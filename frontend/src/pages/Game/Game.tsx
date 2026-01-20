@@ -27,7 +27,9 @@ type Usuario = {
   pontos: number;
 };
 
-export default function Game() {
+type GameProps = { sonsAtivos: boolean; };
+
+export default function Game({ sonsAtivos }: GameProps) {
   const [pergunta, setPergunta] = useState<PerguntaData | null>(null);
   const [resposta, setResposta] = useState<string>("");
   const [feedback, setFeedback] = useState<string>("");
@@ -92,15 +94,18 @@ export default function Game() {
   }, []);
 
   const playCorrect = () => {
+  if (!sonsAtivos) return;
   const audio = new Audio(correctSound);
   audio.volume = 0.7;
   audio.play();
-  };
+};
+
   const playWrong = () => {
+  if (!sonsAtivos) return;
   const audio = new Audio(wrongSound);
   audio.volume = 0.7;
   audio.play();
-  }
+};
 
   // Carregar dados do usuário (moedas e pontos)
   const carregarUsuario = useCallback(async () => {
@@ -314,6 +319,9 @@ export default function Game() {
 
   return (
     <div className="game-container">
+      <div className="back-button-container">
+                <BackButton onClick={() => navigate("/menu")}/>
+      </div>
 
       {/* Header com informações do jogo */}
       <div className="game-header">

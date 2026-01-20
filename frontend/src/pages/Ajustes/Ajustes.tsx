@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button, BackButton} from "../../components/Button";
 
+type AjustesProps = { sonsAtivos: boolean; setSonsAtivos: (value: boolean) => void; };
+export default function Ajustes({ sonsAtivos, setSonsAtivos }: AjustesProps) {
 
-export default function Ajustes() {
   const navigate = useNavigate();
 
   const [dark, setDark] = useState(() => {
@@ -39,9 +40,14 @@ export default function Ajustes() {
         </div>
 
         <div className="ajuste-item">
-          <span>Ativar sons</span>
-          <input type="checkbox" defaultChecked />
+            <span>Ativar sons</span>
+            <input
+              type="checkbox"
+              checked={sonsAtivos}
+              onChange={(e) => setSonsAtivos(e.target.checked)}
+            />
         </div>
+
 
         {/* <div className="ajuste-item">
           <span>Idioma</span>
