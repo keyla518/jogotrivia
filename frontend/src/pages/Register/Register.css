@@ -1,35 +1,37 @@
 .registo-container {
-  height: 100vh;
+  height: 100%;
   background: linear-gradient(to bottom, #0b77a8, #2db2d6);
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center; /* centraliza vertical */
+  gap: 20px;  
   position: relative;
   font-family: Arial, sans-serif;
+  overflow-x: hidden; /* evita scroll horizontal */
+  overflow-y: auto;
 }
 
-/* Botão voltar */
-.btn-voltar {
+
+.back-button-container {
   position: absolute;
-  top: 25px;
-  left: 25px;
-  background: #f5c400;
-  border: none;
-  border-radius: 12px;
-  width: 55px;
-  height: 45px;
-  cursor: pointer;
+  top: 20px;   
+  left: 20px;  
+  z-index: 50;
+  position: fixed;
 }
 
 /* Esquerda */
 .registo-esquerda {
   position: relative;
   width: 330px;
+  max-height: 50vh;
 }
 
 .imagem-nazare {
   width: 100%;
   border-radius: 20px;
+
+
 }
 
 .texto-curiosidade {
@@ -71,15 +73,21 @@
 }
 
 .registo-direita h1 {
-  color: white;
-  font-size: 42px;
-  margin-bottom: 25px;
+  text-align: center;
+  color: var(--white);
+  font-size: 36px;
+  font-weight: 700;
+  margin: 0 0 35px 0;
+  -webkit-text-stroke: 3px black;
+  paint-order: stroke fill;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 1);
 }
 
 .registo-direita label {
   color: white;
   font-size: 18px;
   margin-bottom: 6px;
+  font-family: 'work Sans', sans-serif;
 }
 
 .registo-direita button {
@@ -98,4 +106,18 @@
 .sucesso {
   color: #caffca;
   margin-bottom: 10px;
+}
+
+.error-message {
+  background: rgba(255, 68, 68, 0.15);
+  border: 2px solid var(--error-red);
+  color: var(--white);
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: shake 0.5s ease;
 }

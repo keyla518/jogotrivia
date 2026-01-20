@@ -84,7 +84,7 @@ export default function Utilizadores() {
   };
 
   const handleEdit = (u: Utilizador) => {
-    setEditingId(u.usuarioID); // linha que indica quem está sendo editado
+    setEditingId(u.usuarioID);
     setEditForm({ nomeUsuario: u.nomeUsuario, email: u.email });
   };
 
@@ -114,36 +114,38 @@ export default function Utilizadores() {
     setEditForm({ nomeUsuario: "", email: "" });
   };
 
-  if (loading) return <p>Carregando utilizadores...</p>;
+  if (loading) return <p className="utilizadores-loading">Carregando utilizadores...</p>;
 
   return (
-    <div className="utilizadores-container">
-      <h1>Gestão de Utilizadores</h1>
+    <div className="utilizadores-page-container">
+      <h1 className="utilizadores-page-title">Gestão de Utilizadores</h1>
 
       {/* Menu Hamburguer */}
       {!menuOpen && (
-        <button className="menu-btn" onClick={() => setMenuOpen(true)}>
-          <div className="hamburger">
-            <span></span><span></span><span></span>
+        <button className="utilizadores-menu-btn" onClick={() => setMenuOpen(true)}>
+          <div className="utilizadores-hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
           </div>
         </button>
       )}
 
       {/* Sidebar */}
-      <div className={`sidebar ${menuOpen ? "open" : ""}`}>
-        <div className="sidebar-header">
+      <div className={`utilizadores-sidebar ${menuOpen ? "utilizadores-sidebar-open" : ""}`}>
+        <div className="utilizadores-sidebar-header">
           <h2>Menu</h2>
-          <button className="close-btn" onClick={() => setMenuOpen(false)}>
+          <button className="utilizadores-close-btn" onClick={() => setMenuOpen(false)}>
             ×
           </button>
         </div>
 
-        <nav className="sidebar-nav">
+        <nav className="utilizadores-sidebar-nav">
           <button onClick={() => navigate("/backoffice/perguntas")}>Perguntas</button>
           <button onClick={() => navigate("/backoffice/utilizadores")}>Utilizadores</button>
 
           <button
-            className="logout-btn"
+            className="utilizadores-logout-btn"
             onClick={() => {
               localStorage.removeItem("token");
               navigate("/login");
@@ -156,11 +158,11 @@ export default function Utilizadores() {
 
       {/* Overlay */}
       {menuOpen && (
-        <div className="overlay" onClick={() => setMenuOpen(false)}></div>
+        <div className="utilizadores-overlay" onClick={() => setMenuOpen(false)}></div>
       )}
 
       {/* Barra de busca + Filtros */}
-      <div className="controles">
+      <div className="utilizadores-controles">
         <input
           type="text"
           placeholder="Buscar por nome ou email..."
@@ -169,21 +171,21 @@ export default function Utilizadores() {
             setSearchTerm(e.target.value);
             setCurrentPage(1);
           }}
-          className="search-input"
+          className="utilizadores-search-input"
         />
 
         {/* Botão de Ordenação */}
-        <div className="filtros-container">
-          <div className="filtro-ordenar">
+        <div className="utilizadores-filtros-container">
+          <div className="utilizadores-filtro-ordenar">
             <button
-              className="ordenar-btn"
+              className="utilizadores-ordenar-btn"
               onClick={() => setSortMenuOpen(!sortMenuOpen)}
             >
               Ordenar ▼
             </button>
 
             {sortMenuOpen && (
-              <div className="ordenar-dropdown">
+              <div className="utilizadores-ordenar-dropdown">
                 <button onClick={() => handleSort("moedas")}>
                   Moedas {sortField === "moedas" && (sortOrder === "asc" ? "↑" : "↓")}
                 </button>
@@ -196,7 +198,7 @@ export default function Utilizadores() {
           </div>
         </div>
 
-        <div className="info">
+        <div className="utilizadores-info">
           Total: {utilizadoresOrdenados.length} utilizador(es)
         </div>
       </div>
@@ -228,7 +230,7 @@ export default function Utilizadores() {
                     onChange={(e) =>
                       setEditForm({ ...editForm, nomeUsuario: e.target.value })
                     }
-                    className="edit-input"
+                    className="utilizadores-edit-input"
                   />
                 ) : (
                   u.nomeUsuario
@@ -244,7 +246,7 @@ export default function Utilizadores() {
                     onChange={(e) =>
                       setEditForm({ ...editForm, email: e.target.value })
                     }
-                    className="edit-input"
+                    className="utilizadores-edit-input"
                   />
                 ) : (
                   u.email
@@ -256,16 +258,16 @@ export default function Utilizadores() {
 
               <td>
                 {editingId === u.usuarioID ? (
-                  <div className="edit-buttons">
-                    <button onClick={() => handleSave(u.usuarioID)} className="salvar">
+                  <div className="utilizadores-edit-buttons">
+                    <button onClick={() => handleSave(u.usuarioID)} className="utilizadores-salvar">
                       Guardar
                     </button>
-                    <button onClick={handleCancel} className="cancelar">
+                    <button onClick={handleCancel} className="utilizadores-cancelar">
                       Cancelar
                     </button>
                   </div>
                 ) : (
-                  <button onClick={() => handleEdit(u)} className="editar">
+                  <button onClick={() => handleEdit(u)} className="utilizadores-editar">
                     ✏️
                   </button>
                 )}
@@ -277,23 +279,23 @@ export default function Utilizadores() {
 
       {/* Paginação */}
       {totalPages > 1 && (
-        <div className="paginacao">
+        <div className="utilizadores-paginacao">
           <button
             onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 1}
-            className="paginacao-btn"
+            className="utilizadores-paginacao-btn"
           >
             Anterior
           </button>
 
-          <span className="paginacao-info">
+          <span className="utilizadores-paginacao-info">
             Página {currentPage} de {totalPages}
           </span>
 
           <button
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="paginacao-btn"
+            className="utilizadores-paginacao-btn"
           >
             Próxima
           </button>

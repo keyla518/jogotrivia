@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import navio from "../../assets/nazare.png";
 import aviao from "../../assets/avião.png";
 import linha from "../../assets/linha.png";
-import setavoltar from "../../assets/setavoltar.svg";
 import { registerUser } from "../../api/auth";
+import { Button, BackButton } from "../../components/Button";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -15,9 +15,38 @@ export default function Register() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+
+  const isValidEmail = (email: string) => {
+    return /^\S+@\S+\.\S+$/.test(email);
+  };
+
+  const isValidName = (name: string) => {
+    return /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/.test(name); 
+  };
+
+  const isValidPassword = (password: string) => {
+    return password.length >= 6;
+  };
+
+
+
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    if (!isValidEmail(email)) {
+      setError("Por favor insira um email válido.");
+      return;
+    }
+    if (!isValidName(nomeUsuario)) {
+      setError("O nome só pode conter letras.");
+      return;
+    }
+    if (!isValidPassword(password)) {
+      setError("A palavra-passe deve ter pelo menos 6 caracteres.");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -29,8 +58,18 @@ export default function Register() {
 
       
     } catch (err: any) {
-      console.error("Ocorreu um erro no registro", err.response?.data || err.message);
-      setError(err.response?.data?.message || "Erro no registro");
+      const apiError = err.response?.data?.error;
+      const statusCode = err.response?.status;
+
+      if (statusCode === 400 && apiError === "Email já está em uso.") {
+        setError("Este email já está em uso");
+      } else if (statusCode === 400 && apiError === "Email inválido.") {
+        setError("O email inserido é inválido.");
+      } else {
+        setError(apiError || "Erro no registro");
+      }
+
+      console.error("Erro no registro:", apiError || err.message);
     } finally {
       setIsLoading(false);
     }
@@ -38,9 +77,10 @@ export default function Register() {
 
   return (
     <div className="login-container">
-      <button className="btn-back" onClick={() => navigate("/")}>
-        ←
-      </button>
+      <div className="back-button-container">
+        <BackButton onClick={() => navigate("/")}/>
+          
+      </div>
 
       <div className="login-content">
         <div className="left-panel">
@@ -109,13 +149,14 @@ export default function Register() {
                 </div>
               )}
 
-              <button 
-                type="submit" 
-                className="btn-confirm"
-                disabled={isLoading}
-              >
-                {isLoading ? "A entrar..." : "Confirmar"}
-              </button>
+               <div className="btn-login">
+                <Button 
+                  variant="action"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "A entrar..." : "Confirmar"}
+                </Button>
+               </div> 
             </form>
           </div>
         </div>

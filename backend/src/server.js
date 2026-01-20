@@ -13,9 +13,6 @@ import utilizadorRoutes from "./routes/utilizadorRoutes.js";
 import mapaRoutes from "./routes/mapaRoutes.js";
 
 
-
-
-
 dotenv.config();
 
 const app = express();
@@ -46,19 +43,6 @@ app.use("/api/perguntas", perguntasRoutes);
 app.use("/api/regioes", regiaoRoutes);
 app.use("/api/categorias", categoriaRoutes);
 app.use("/api/mapa", mapaRoutes);
-
-
-
-// app.use("/user", userRoutes);
-// app.use("/auth", authRoutes);
-// app.use("/jogo", gameRoutes);
-// app.use("/admin", adminRoutes);
-// app.use("/api", perguntasRoutes);
-// app.use("/api/regioes", regiaoRoutes);
-// app.use("/api/categorias", categoriaRoutes);
-// app.use("/api/utilizadores", utilizadorRoutes);
-// app.use("/api/utilizador", userRoutes);
-
 
 
 // Rota teste

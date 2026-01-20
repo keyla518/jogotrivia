@@ -4,14 +4,12 @@ import { useNavigate } from "react-router-dom";
 import navio from "../../assets/navio.png";
 import aviao from "../../assets/avião.png";
 import linha from "../../assets/linha.png";
-import setavoltar from "../../assets/setavoltar.svg";
 import { loginUser } from "../../api/auth";
 import { jwtDecode } from "jwt-decode";
+import { Button, BackButton } from "../../components/Button";
 
-// Adicionar interface para o token decodificado
 interface DecodedToken {
   role: string;
-  // adicionar outros campos que o token possa ter
   exp?: number;
   iat?: number;
 }
@@ -52,9 +50,10 @@ export default function Login() {
 
   return (
     <div className="login-container">
-      <button className="btn-back" onClick={() => navigate("/")}>
-        ←
-      </button>
+      <div className="back-button-container">
+        <BackButton onClick={() => navigate("/")}/>
+          
+      </div>
 
       <div className="login-content">
         <div className="left-panel">
@@ -109,13 +108,14 @@ export default function Login() {
                 </div>
               )}
 
-              <button 
-                type="submit" 
-                className="btn-confirm"
-                disabled={isLoading}
-              >
-                {isLoading ? "A entrar..." : "Confirmar"}
-              </button>
+               <div className="btn-login">
+                <Button 
+                  variant="action"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "A entrar..." : "Confirmar"}
+                </Button>
+               </div> 
             </form>
           </div>
         </div>

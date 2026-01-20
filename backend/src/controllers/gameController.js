@@ -13,7 +13,7 @@ export const proximaPergunta = async (req, res) => {
     // Buscar o próximo progresso não concluído
     const progresso = await prisma.progressoCategoriaRegiao.findFirst({
       where: { usuarioID, concluido: false },
-      include: { regiao: true, categoria: true }
+      include: { regiao: true, categoria: true },
     });
 
     if (!progresso) {

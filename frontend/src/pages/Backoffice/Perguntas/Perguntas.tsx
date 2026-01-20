@@ -65,7 +65,7 @@ export default function Backoffice() {
         getCategorias(),
       ]);
 
-      console.log("Perguntas recibidas:", resPerguntas); // ← AÑADE ESTO
+      console.log("Perguntas recibidas:", resPerguntas);
       console.log("Regiões:", resRegioes);
       console.log("Categorias:", resCategorias);
 
@@ -79,7 +79,6 @@ export default function Backoffice() {
     }
   };
 
-  // ➤ Modal: Criar
   const abrirModalNovo = () => {
     setEditingPergunta(null);
     setFormData({
@@ -95,7 +94,6 @@ export default function Backoffice() {
     setShowModal(true);
   };
 
-  // ➤ Modal: Editar
   const abrirModalEditar = (pergunta: Pergunta) => {
     setEditingPergunta(pergunta);
     setFormData({
@@ -111,7 +109,6 @@ export default function Backoffice() {
     setShowModal(true);
   };
 
-  // ➤ Guardar / Editar
   const salvarPergunta = async () => {
     const data = {
       ...formData,
@@ -133,7 +130,6 @@ export default function Backoffice() {
     }
   };
 
-  // ➤ Deletar
   const deletarPergunta = async (id: number) => {
     if (!confirm("Tens a certeza?")) return;
 
@@ -152,45 +148,52 @@ export default function Backoffice() {
   });
 
   return (
-    <div className="backoffice-container">
+    <div className="perguntas-backoffice-container">
 
       {/* Menu hamburguer */}
       {!menuOpen && (
-        <button className="menu-btn" onClick={() => setMenuOpen(true)}>
-          <div className="hamburger"><span></span><span></span><span></span></div>
+        <button className="perguntas-menu-btn" onClick={() => setMenuOpen(true)}>
+          <div className="perguntas-hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
         </button>
       )}
 
       {/* Sidebar */}
-      <div className={`sidebar ${menuOpen ? "open" : ""}`}>
-        <div className="sidebar-header">
+      <div className={`perguntas-sidebar ${menuOpen ? "perguntas-sidebar-open" : ""}`}>
+        <div className="perguntas-sidebar-header">
           <h2>Menu</h2>
-          <button className="close-btn" onClick={() => setMenuOpen(false)}>×</button>
+          <button className="perguntas-close-btn" onClick={() => setMenuOpen(false)}>×</button>
         </div>
 
-        <nav className="sidebar-nav">
+        <nav className="perguntas-sidebar-nav">
           <button onClick={() => navigate("/backoffice/perguntas")}>Perguntas</button>
           <button onClick={() => navigate("/backoffice/utilizadores")}>Utilizadores</button>
-          <button className="logout-btn" onClick={() => { localStorage.removeItem("token"); navigate("/login")}}>Sair</button>
+          <button className="perguntas-logout-btn" onClick={() => { localStorage.removeItem("token"); navigate("/login")}}>Sair</button>
         </nav>
-            
       </div>
 
       {/* Overlay */}
-      {menuOpen && <div className="overlay" onClick={() => setMenuOpen(false)}></div>}
+      {menuOpen && <div className="perguntas-overlay" onClick={() => setMenuOpen(false)}></div>}
 
       {/* Conteúdo */}
-      <div className="backoffice-content">
-        <div className="backoffice-header">
-          <h1 className="page-title">Perguntas</h1>
-          <button className="btn-criar" onClick={abrirModalNovo}>Criar nova</button>
+      <div className="perguntas-backoffice-content">
+        <div className="perguntas-backoffice-header">
+          <h1 className="perguntas-page-title">Perguntas</h1>
+          <button className="perguntas-btn-criar" onClick={abrirModalNovo}>Criar nova</button>
         </div>
 
         {/* Filtros */}
-        <div className="filtros-container">
-          <div className="filtro-group">
+        <div className="perguntas-filtros-container">
+          <div className="perguntas-filtro-group">
             <label>Região</label>
-            <select value={filtroRegiao} onChange={(e) => setFiltroRegiao(e.target.value)}>
+            <select 
+              className="perguntas-filtro-select"
+              value={filtroRegiao} 
+              onChange={(e) => setFiltroRegiao(e.target.value)}
+            >
               <option value="">Todas</option>
               {regioes.map((r) => (
                 <option key={r.regiaoID} value={r.regiaoID}>{r.nomeRegiao}</option>
@@ -198,9 +201,13 @@ export default function Backoffice() {
             </select>
           </div>
 
-          <div className="filtro-group">
+          <div className="perguntas-filtro-group">
             <label>Categoria</label>
-            <select value={filtroCategoria} onChange={(e) => setFiltroCategoria(e.target.value)}>
+            <select 
+              className="perguntas-filtro-select"
+              value={filtroCategoria} 
+              onChange={(e) => setFiltroCategoria(e.target.value)}
+            >
               <option value="">Todas</option>
               {categorias.map((c) => (
                 <option key={c.categoriaID} value={c.categoriaID}>{c.nomeCategoria}</option>
@@ -212,9 +219,9 @@ export default function Backoffice() {
         {/* Tabela */}
         <div className="perguntas-table-container">
           {isLoading ? (
-            <div className="loading">A carregar...</div>
+            <div className="perguntas-loading">A carregar...</div>
           ) : perguntasFiltradas.length === 0 ? (
-            <div className="empty-state">Nenhuma pergunta encontrada</div>
+            <div className="perguntas-empty-state">Nenhuma pergunta encontrada</div>
           ) : (
             <table className="perguntas-table">
               <thead>
@@ -228,12 +235,12 @@ export default function Backoffice() {
               <tbody>
                 {perguntasFiltradas.map((p) => (
                   <tr key={p.perguntaID}>
-                    <td className="pergunta-texto">{p.textoPergunta}</td>
+                    <td className="perguntas-pergunta-texto">{p.textoPergunta}</td>
                     <td>{p.regiao?.nomeRegiao}</td>
                     <td>{p.categoria?.nomeCategoria}</td>
-                    <td className="pergunta-actions">
-                      <button className="btn-edit" onClick={() => abrirModalEditar(p)}>✏️</button>
-                      <button className="btn-delete" onClick={() => deletarPergunta(p.perguntaID)}>🗑️</button>
+                    <td className="perguntas-pergunta-actions">
+                      <button className="perguntas-btn-edit" onClick={() => abrirModalEditar(p)}>✏️</button>
+                      <button className="perguntas-btn-delete" onClick={() => deletarPergunta(p.perguntaID)}>🗑️</button>
                     </td>
                   </tr>
                 ))}
@@ -245,11 +252,14 @@ export default function Backoffice() {
 
       {/* Modal */}
       {showModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h2>{editingPergunta ? "Editar Pergunta" : "Criar Pergunta"}</h2>
+        <div className="perguntas-modal-overlay">
+          <div className="perguntas-modal">
+            <h2 className="perguntas-modal-title">
+              {editingPergunta ? "Editar Pergunta" : "Criar Pergunta"}
+            </h2>
 
             <input
+              className="perguntas-modal-input"
               type="text"
               placeholder="Texto da pergunta"
               value={formData.textoPergunta}
@@ -257,6 +267,7 @@ export default function Backoffice() {
             />
 
             <input
+              className="perguntas-modal-input"
               type="text"
               placeholder="Opção A"
               value={formData.opcaoA}
@@ -264,6 +275,7 @@ export default function Backoffice() {
             />
 
             <input
+              className="perguntas-modal-input"
               type="text"
               placeholder="Opção B"
               value={formData.opcaoB}
@@ -271,6 +283,7 @@ export default function Backoffice() {
             />
 
             <input
+              className="perguntas-modal-input"
               type="text"
               placeholder="Opção C"
               value={formData.opcaoC}
@@ -278,6 +291,7 @@ export default function Backoffice() {
             />
 
             <input
+              className="perguntas-modal-input"
               type="text"
               placeholder="Opção D"
               value={formData.opcaoD}
@@ -285,6 +299,7 @@ export default function Backoffice() {
             />
 
             <select
+              className="perguntas-modal-select"
               value={formData.opcaoCerta}
               onChange={(e) => setFormData({ ...formData, opcaoCerta: e.target.value })}
             >
@@ -295,6 +310,7 @@ export default function Backoffice() {
             </select>
 
             <select
+              className="perguntas-modal-select"
               value={formData.regiaoID}
               onChange={(e) => setFormData({ ...formData, regiaoID: e.target.value })}
             >
@@ -305,6 +321,7 @@ export default function Backoffice() {
             </select>
 
             <select
+              className="perguntas-modal-select"
               value={formData.categoriaID}
               onChange={(e) => setFormData({ ...formData, categoriaID: e.target.value })}
             >
@@ -314,9 +331,9 @@ export default function Backoffice() {
               ))}
             </select>
 
-            <div className="modal-actions">
-              <button className="btn-save" onClick={salvarPergunta}>Guardar</button>
-              <button className="btn-cancel" onClick={() => setShowModal(false)}>Cancelar</button>
+            <div className="perguntas-modal-actions">
+              <button className="perguntas-btn-save" onClick={salvarPergunta}>Guardar</button>
+              <button className="perguntas-btn-cancel" onClick={() => setShowModal(false)}>Cancelar</button>
             </div>
           </div>
         </div>

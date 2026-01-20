@@ -1,0 +1,242 @@
+/* Button.css */
+
+.game-button {
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  font-family: 'Baloo 2';
+  -webkit-text-stroke: 3.5px black;
+  paint-order: stroke fill;
+  text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.6);
+}
+
+
+.game-button__content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Tamanhos */
+.game-button--small {
+  padding: 16px 90px;
+  font-size: 22px;
+  border-radius: 10px;
+}
+
+.game-button--medium {
+  width: 100%;
+  min-width: 250px;
+  height: 70px;
+  font-size: 24px;
+  border-radius: 10px;
+  max-width: 360px; 
+  
+}
+
+.game-button--large {
+  padding: 20px 120px;
+  font-size: 26px;
+  border-radius: 15px;
+}
+
+.game-button--icon {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-button--back {
+  width: 50px;
+  height: 40px;
+  min-width: 0;
+  border-radius: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #F9C216;
+  color: white;
+}
+
+.game-button--back:hover {
+  box-shadow: 
+  0 5px 0px rgba(249, 194, 22, 0.53);
+
+}
+
+/* Variantes de cor */
+.game-button--primary {
+  background-color: #FFB703;
+  color: white;
+  box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.game-button--primary:hover {
+  box-shadow: inset 2px 2px 3px rgba(0, 0, 0, 0.5),
+              0 8px 0px  rgba(255, 183, 3, 0.53);
+}
+
+.game-button--secondary {
+  background-color: #023047;
+  color: white;
+  box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.game-button--secondary:hover {
+  box-shadow: inset 2px 2px 3px rgba(0, 0, 0, 0.5),
+              0 8px 0px  rgba(2, 48, 71, 0.53);
+}
+
+.game-button--tertiary {
+  background-color: #8ECAE6;
+  color: white;
+  box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.game-button--tertiary:hover {
+  box-shadow: inset 2px 2px 3px rgba(0, 0, 0, 0.5),
+              0 8px 0px  rgba(148, 219, 236, 0.53);
+}
+
+.game-button--action {
+  background-color: #FB8500;
+  color: white;
+  box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.game-button--action:hover {
+  box-shadow:inset 2px 2px 3px rgba(0, 0, 0, 0.5),
+              0 8px 0px rgba(251, 134, 0, 0.636);
+}
+
+
+
+.game-button--accept {
+  background-color: #00FAA3;
+  color: white;
+  box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.game-button--accept:hover {
+  box-shadow: inset 2px 2px 3px rgba(0, 0, 0, 0.5),
+              0 8px 0px rgba(0, 250, 163, 0.53);
+}
+
+.game-button--cancel {
+  background-color: #B02F3D;
+  color: white;
+  box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.game-button--cancel:hover {
+  box-shadow: inset 2px 2px 3px rgba(0, 0, 0, 0.5),
+              0 8px 0px rgba(176, 47, 61, 0.53);
+}
+
+/* Estado disabled */
+.game-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.game-button:disabled:hover {
+  box-shadow: inset 4px 4px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Media queries para tornar o botão medium responsivo */
+@media (max-width: 768px) {
+  .game-button--medium {
+    width: 85%;
+    min-width: 200px;
+    height: 60px;
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-button--medium {
+    width: 90%;
+    min-width: 180px;
+    height: 55px;
+    font-size: 18px;
+    -webkit-text-stroke: 2.5px black; /* Contorno mais fino em mobile */
+  }
+}
+
+@media (max-width: 360px) {
+  .game-button--medium {
+    width: 95%;
+    min-width: 150px;
+    height: 50px;
+    font-size: 16px;
+    -webkit-text-stroke: 2px black;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .game-button--large {
+    padding: 18px 90px;
+    font-size: 24px;
+    border-radius: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-button--large {
+    padding: 16px 70px;
+    font-size: 20px;
+    border-radius: 10px;
+    -webkit-text-stroke: 2.5px black;
+  }
+}
+
+@media (max-width: 360px) {
+  .game-button--large {
+    padding: 14px 50px;
+    font-size: 18px;
+    border-radius: 8px;
+    -webkit-text-stroke: 2px black;
+  }
+}
+
+.game-button--back {
+  width: 50px;
+  height: 40px;
+  min-width: 0;
+  border-radius: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #F9C216;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .game-button--back {
+    width: 45px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-button--back {
+    width: 40px;
+    height: 32px;
+    -webkit-text-stroke: 2.5px black;
+  }
+}
+
+@media (max-width: 360px) {
+  .game-button--back {
+    width: 36px;
+    height: 30px;
+    -webkit-text-stroke: 2px black;
+  }
+}

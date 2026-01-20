@@ -3,20 +3,27 @@ import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
+const emailValido = (email) => /^\S+@\S+\.\S+$/.test(email);
+
 
 export const register = async (req, res) => {
   const { nomeUsuario, email, palavrapasse } = req.body;
 
   try {
-    // 1️⃣ Verificar se o email já existe
+      // Validar formato do email
+    if (!emailValido(email)) {
+      return res.status(400).json({ error: "Email inválido." });
+    }
+
+    // Verificar se o email já existe
     const existente = await prisma.utilizador.findUnique({ where: { email } });
     if (existente)
       return res.status(400).json({ error: "Email já está em uso." });
 
-    // 2️⃣ Hash da senha
+    // Hash da senha
     const hash = await bcrypt.hash(palavrapasse, 10);
 
-    // 3️⃣ Criar o novo usuário
+    // Criar o novo usuário
     const novoUsuario = await prisma.utilizador.create({
       data: {
         nomeUsuario,
@@ -25,19 +32,21 @@ export const register = async (req, res) => {
       },
     });
 
-    // 4️⃣ Buscar todas as regiões e categorias
+    //  Buscar todas as regiões e categorias
     const regioes = await prisma.regiao.findMany();
     const categorias = await prisma.categoria.findMany();
 
-    // 5️⃣ Criar progresso inicial
-    for (const reg of regioes) {
+    //  Criar progresso inicial
+    const algarve = regioes.find(r => r.nomeRegiao === "Algarve");
+    
+    if (algarve) {
       for (const cat of categorias) {
         await prisma.progressoCategoriaRegiao.create({
           data: {
             usuarioID: novoUsuario.usuarioID,
-            regiaoID: reg.regiaoID,
+            regiaoID: algarve.regiaoID,
             categoriaID: cat.categoriaID,
-            concluido: reg.nomeRegiao === "Algarve",
+            concluido: false, 
           },
         });
       }

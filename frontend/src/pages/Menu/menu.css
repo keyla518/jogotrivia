@@ -2,9 +2,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: sans-serif;
   padding-top: 8px;
-  height: 100vh;
+  height: 100%;
 }
 
 .menu-buttons {
@@ -14,44 +13,3 @@
   margin-top: 10px;
 }
 
-.menu-buttons button {
-  height: 82px;
-  padding: 0 30px; 
-  font-size: 30px;
-  font-family: 'Baloo 2', cursive; font-weight: 600;
-  text-shadow: 2px 2px 4px black;
-
-  cursor: pointer;
-  border: none;
-  border-radius: 8px;
-  background-color: #0077cc;
-  color: white;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  transition: background-color 0.2s;
-}
-
-.menu-buttons button:hover {
-  background-color: #005fa3;
-}
-
-#jogar {
-  background-color: #FB8500;
-}
-
-#ajustes {
-  background-color: #3FBFD7;
-  font-weight: bold;
-}
-
-#perfil {
-  background-color: #F9C216;
-  font-weight: bolder;
-}
-
-#ajuda {
-  background-color: #133E53;
-}
